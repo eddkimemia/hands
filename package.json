@@ -1,0 +1,31 @@
+{
+  "name": "hands-of-hope-foundation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hands of Hope Foundation — Extending Hands. Inspiring Hope.",
+  "scripts": {
+    "dev": "node scripts/db.mjs && next dev",
+    "build": "next build",
+    "start": "node scripts/db.mjs && next start",
+    "db": "node scripts/db.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "next": "^15.3.4",
+    "pg": "^8.23.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "autoprefixer": "^10.4.21",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  }
+}
