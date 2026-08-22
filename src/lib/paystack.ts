@@ -34,6 +34,7 @@ export async function initializeTransaction(opts: {
   email: string;
   amountKes: number;
   reference: string;
+  currency?: "KES" | "USD";
   metadata?: Record<string, unknown>;
 }): Promise<InitializedTransaction> {
   const origin =
@@ -48,7 +49,7 @@ export async function initializeTransaction(opts: {
     body: JSON.stringify({
       email: opts.email,
       amount: Math.round(opts.amountKes * 100), // kobo/cents
-      currency: "KES",
+      currency: opts.currency ?? "KES",
       reference: opts.reference,
       callback_url: `${origin}/donate/callback`,
       metadata: opts.metadata ?? {},

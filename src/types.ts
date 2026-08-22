@@ -185,7 +185,9 @@ export interface VolunteerApp {
 
 export interface DonationIntent {
   id: string;
+  /** Amount in the intent's currency (see below). */
   amountKes: number;
+  currency?: "KES" | "USD";
   frequency: "once" | "monthly";
   projectSlug?: string;
   donorName: string;

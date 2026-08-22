@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { formatPrice, useCurrency } from "@/components/cart/CurrencyContext";
+import { CurrencyToggle } from "@/components/site/CurrencyToggle";
 import { Icon } from "@/components/Icon";
 
-const PRESETS = [500, 1000, 2500, 5000];
+const KES_PRESETS = [500, 1000, 2500, 5000];
+const USD_PRESETS = [5, 10, 25, 50];
 
 interface ProjectOption {
   slug: string;
@@ -11,17 +14,25 @@ interface ProjectOption {
 }
 
 export function DonateWidget({ projects }: { projects: ProjectOption[] }) {
+  const { currency, setCurrency } = useCurrency();
   const [frequency, setFrequency] = useState<"once" | "monthly">("once");
-  const [amount, setAmount] = useState<number>(1000);
+  const [amountKes, setAmountKes] = useState<number>(1000);
+  const [amountUsd, setAmountUsd] = useState<number>(10);
   const [custom, setCustom] = useState("");
   const [projectSlug, setProjectSlug] = useState("");
   const [anonymous, setAnonymous] = useState(false);
 
-  const [status, setStatus] = useState<"form" | "loading" | "done" | "error" | "redirecting">("form");
+  const [status, setStatus] = useState<"form" | "loading" | "redirecting" | "done" | "error">("form");
   const [result, setResult] = useState<{ reference?: string; message?: string }>({});
   const [error, setError] = useState("");
 
-  const effectiveAmount = custom ? Number(custom) : amount;
+  const isUsd = currency === "USD";
+  const presets = isUsd ? USD_PRESETS : KES_PRESETS;
+  const minAmount = isUsd ? 1 : 50;
+
+  // Active amount in the selected currency (custom field overrides presets).
+  const effectiveAmount = custom ? Number(custom) : isUsd ? amountUsd : amountKes;
+  const validAmount = effectiveAmount >= minAmount;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,6 +46,7 @@ export function DonateWidget({ projects }: { projects: ProjectOption[] }) {
         body: JSON.stringify({
           ...data,
           amountKes: effectiveAmount,
+          currency,
           frequency,
           projectSlug: projectSlug || undefined,
           anonymous,
@@ -84,7 +96,14 @@ export function DonateWidget({ projects }: { projects: ProjectOption[] }) {
 
   return (
     <form onSubmit={onSubmit} className="card p-7 sm:p-9" aria-label="Donation form">
-      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+      <input
+        type="text"
+        name="_gotcha"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hp-field"
+      />
 
       {/* Frequency */}
       <div role="radiogroup" aria-label="Giving frequency" className="grid grid-cols-2 gap-1.5 rounded-full bg-navy-50 p-1.5">
@@ -104,47 +123,61 @@ export function DonateWidget({ projects }: { projects: ProjectOption[] }) {
         ))}
       </div>
 
+      {/* Currency */}
+      <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-navy-100 bg-sand px-4 py-3">
+        <span className="text-xs font-semibold leading-snug text-navy-700">
+          {isUsd ? "International giving (USD)" : "Giving from Kenya (KES)"}
+        </span>
+        <CurrencyToggle />
+      </div>
+
       {/* Amounts */}
       <fieldset className="mt-6">
-        <legend className="label">Choose an amount (KES)</legend>
+        <legend className="label">Choose an amount</legend>
         <div className="mt-1 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-          {PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => {
-                setAmount(preset);
-                setCustom("");
-              }}
-              aria-pressed={!custom && amount === preset}
-              className={`rounded-xl border px-3 py-3 text-sm font-bold transition-all ${
-                !custom && amount === preset
-                  ? "border-gold-400 bg-gold-50 text-gold-900 ring-2 ring-gold-300"
-                  : "border-navy-200 text-navy-800 hover:border-gold-300 hover:bg-gold-50/40"
-              }`}
-            >
-              {preset.toLocaleString()}
-            </button>
-          ))}
+          {presets.map((preset) => {
+            const active = !custom && effectiveAmount === preset && validAmount;
+            return (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => {
+                  if (isUsd) setAmountUsd(preset);
+                  else setAmountKes(preset);
+                  setCustom("");
+                }}
+                aria-pressed={active}
+                className={`rounded-xl border px-3 py-3 text-sm font-bold transition-all ${
+                  active
+                    ? "border-gold-400 bg-gold-50 text-gold-900 ring-2 ring-gold-300"
+                    : "border-navy-200 text-navy-800 hover:border-gold-300 hover:bg-gold-50/40"
+                }`}
+              >
+                {isUsd ? `$${preset.toLocaleString()}` : preset.toLocaleString()}
+              </button>
+            );
+          })}
         </div>
         <div className="relative mt-2.5">
           <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-navy-400">
-            KES
+            {isUsd ? "$" : "KES"}
           </span>
           <input
             type="number"
-            min={50}
+            min={minAmount}
             step={1}
             inputMode="numeric"
             placeholder="Custom amount"
-            aria-label="Custom amount in Kenyan shillings"
+            aria-label={`Custom amount in ${isUsd ? "US dollars" : "Kenyan shillings"}`}
             value={custom}
             onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))}
             className="input pl-14"
           />
         </div>
-        {effectiveAmount > 0 && effectiveAmount < 50 && (
-          <p className="mt-2 text-xs font-semibold text-red-600">Minimum gift is KES 50.</p>
+        {!validAmount && (
+          <p className="mt-2 text-xs font-semibold text-red-600">
+            Minimum gift is {isUsd ? "$1." : "KES 50."}
+          </p>
         )}
       </fieldset>
 
@@ -212,20 +245,22 @@ export function DonateWidget({ projects }: { projects: ProjectOption[] }) {
 
       <button
         type="submit"
-        disabled={status === "loading" || status === "redirecting" || !effectiveAmount || effectiveAmount < 50}
+        disabled={status === "loading" || status === "redirecting" || !validAmount}
         className="btn-primary btn-lg mt-6 w-full"
       >
         {status === "loading"
           ? "Recording…"
           : status === "redirecting"
             ? "Taking you to secure checkout…"
-            : `Give ${frequency === "monthly" ? "Monthly" : "Once"}${effectiveAmount >= 50 ? ` — KES ${Number(effectiveAmount).toLocaleString()}` : ""}`}
+            : `Give ${frequency === "monthly" ? "Monthly" : "Once"}${
+                validAmount ? ` — ${formatPrice(effectiveAmount, isUsd ? effectiveAmount : undefined, currency)}` : ""
+              }`}
       </button>
 
       <p className="mt-4 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-navy-500">
         <Icon name="lock" size={13} className="mt-0.5 shrink-0" />
-        Online payments are being connected (M-Pesa ready). Your intention is recorded securely and
-        our team completes the gift with you personally.
+        Online payments are secured through our payment provider (M-Pesa ready). Your intention is
+        recorded securely and confirmed only after the payment is verified.
       </p>
     </form>
   );

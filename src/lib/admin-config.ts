@@ -415,12 +415,13 @@ export const RESOURCES: ResourceConfig[] = [
     hideCreate: true,
     titleField: "donorName",
     subtitleField: "reference",
-    columns: ["donorName", "amountKes", "frequency", "status", "reference"],
+    columns: ["donorName", "amountKes", "currency", "frequency", "status", "reference"],
     description:
       "Giving intentions. Mark 'confirmed' ONLY after payment has been verified by your provider or bank.",
     fields: [
       { key: "donorName", label: "Donor", type: "text" },
-      { key: "amountKes", label: "Amount (KES)", type: "number" },
+      { key: "amountKes", label: "Amount (in currency)", type: "number" },
+      { key: "currency", label: "Currency", type: "select", options: ["KES", "USD"] },
       { key: "frequency", label: "Frequency", type: "select", options: ["once", "monthly"] },
       { key: "projectSlug", label: "Designated project", type: "text" },
       { key: "email", label: "Email", type: "text" },

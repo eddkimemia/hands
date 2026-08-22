@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { breadcrumbJsonLd } from "@/lib/breadcrumb-schema";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { SmartImage } from "@/components/SmartImage";
@@ -12,8 +13,17 @@ interface PageHeroProps {
 
 /** Inner-page banner used across all secondary pages. */
 export function PageHero({ eyebrow, title, description, crumbs }: PageHeroProps) {
+  const breadcrumbLd = breadcrumbJsonLd(crumbs ?? []);
+
   return (
     <section className="relative overflow-hidden bg-navy-950">
+      {breadcrumbLd && (
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+      )}
       {/* Team photo behind a navy gradient */}
       <div aria-hidden="true" className="absolute inset-0">
         <SmartImage

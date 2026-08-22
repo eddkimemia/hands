@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unknown donation reference." }, { status: 404 });
   }
   if (intent.status === "confirmed") {
-    return NextResponse.json({ confirmed: true, amountKes: intent.amountKes });
+    return NextResponse.json({ confirmed: true, amountKes: intent.amountKes, currency: intent.currency ?? "KES" });
   }
 
   const result = await verifyTransaction(reference);
@@ -65,7 +65,11 @@ export async function POST(req: Request) {
       status: "confirmed",
       provider: "paystack",
     });
-    return NextResponse.json({ confirmed: true, amountKes: result.amountKes });
+    return NextResponse.json({
+      confirmed: true,
+      amountKes: result.amountKes,
+      currency: intent.currency ?? "KES",
+    });
   }
 
   if (result.status === "failed") {

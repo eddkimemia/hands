@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCart } from "@/components/cart/CartContext";
 import { formatPrice, useCurrency } from "@/components/cart/CurrencyContext";
 import { Icon } from "@/components/Icon";
+import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
 interface Fees {
   deliveryFeeKes: number;
@@ -130,7 +131,7 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
               Continue Shopping
             </Link>
             <a
-              href={`https://wa.me/254715135141?text=${encodeURIComponent(
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                 `Hello! I just placed order ${orderRef} and would like to arrange delivery.`,
               )}`}
               target="_blank"

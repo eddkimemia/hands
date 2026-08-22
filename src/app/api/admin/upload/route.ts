@@ -5,7 +5,7 @@ import { isAdminRequest, unauthorized } from "../_guard";
 
 export const runtime = "nodejs";
 
-const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif", "image/svg+xml"]);
 
 /** Admin-only image upload — stores the file in PostgreSQL, returns its URL. */
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     );
   }
   if (file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "Image is larger than 5 MB." }, { status: 422 });
+    return NextResponse.json({ error: "Image is larger than 10 MB." }, { status: 422 });
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());

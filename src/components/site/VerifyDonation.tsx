@@ -9,6 +9,7 @@ interface State {
   status: "verifying" | "confirmed" | "failed" | "pending" | "error";
   message?: string;
   amountKes?: number;
+  currency?: "KES" | "USD";
 }
 
 export function VerifyDonation() {
@@ -34,7 +35,7 @@ export function VerifyDonation() {
         if (cancelled) return;
 
         if (json.confirmed) {
-          setState({ status: "confirmed", amountKes: json.amountKes });
+          setState({ status: "confirmed", amountKes: json.amountKes, currency: json.currency });
         } else if (json.failed) {
           setState({ status: "failed", message: json.message });
         } else if (json.pending) {
@@ -78,7 +79,8 @@ export function VerifyDonation() {
           </p>
           {typeof state.amountKes === "number" && (
             <p className="mt-2 text-sm font-bold text-gold-700">
-              KES {state.amountKes.toLocaleString()} received
+              {(state.currency ?? "KES") === "USD" ? "$" : "KES "}
+              {state.amountKes.toLocaleString()} received
             </p>
           )}
           <p className="mt-2 text-sm leading-relaxed text-navy-600">

@@ -5,7 +5,7 @@ import { Icon } from "@/components/Icon";
 import { PageHero } from "@/components/site/PageHero";
 import { ProductPurchase } from "@/components/site/ProductPurchase";
 import { SmartImage } from "@/components/SmartImage";
-import { getProductById, getProducts } from "@/lib/content";
+import { getProductById, getProducts, getSettings } from "@/lib/content";
 import { formatKes, SITE_URL, truncate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +42,26 @@ export default async function ProductOrderPage({
   const product = products.find((p) => p.slug === slug);
   if (!product) notFound();
 
+  const settings = await getSettings();
   const others = products.filter((p) => p.slug !== product.slug).slice(0, 3);
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.image.startsWith("http") ? product.image : `${SITE_URL}${product.image}`,
+    brand: { "@type": "Brand", name: settings.orgName },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "KES",
+      price: product.priceKes,
+      availability: product.inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `${SITE_URL}/shop/${product.slug}`,
+    },
+  };
 
   return (
     <>
@@ -54,6 +73,12 @@ export default async function ProductOrderPage({
         eyebrow="Hope Shop"
         title={product.name}
         description={truncate(product.description, 150)}
+      />
+
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
       <section className="section-pad bg-sand">

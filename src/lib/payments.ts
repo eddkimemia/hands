@@ -46,6 +46,7 @@ class PaystackProvider implements PaymentProvider {
     const tx = await initializeTransaction({
       email: intent.email,
       amountKes: intent.amountKes,
+      currency: intent.currency ?? "KES",
       reference: intent.reference,
       metadata: {
         purpose: "donation",

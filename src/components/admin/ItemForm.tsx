@@ -159,21 +159,25 @@ export function ItemForm({ config, item }: { config: ResourceConfig; item: Item 
 
 /* ------------------------------------------------------------------ */
 
-export function FieldInput({
+/** Image picker with PostgreSQL upload + low-resolution guard. */
+function ImageFieldInput({
   field,
+  id,
   value,
-  options,
   onChange,
+  wrapperClass,
 }: {
   field: FieldConfig;
+  id: string;
   value: unknown;
-  options: Record<string, { value: string; label: string }[]>;
   onChange: (value: unknown) => void;
+  wrapperClass: string;
 }) {
-  const id = `fld-${field.key}`;
-  const wrapperClass = field.half ? "sm:col-span-1 col-span-2" : "col-span-2";
+  const current = String(value ?? "");
+  const uploaded = current.startsWith("/api/media/");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [dimWarn, setDimWarn] = useState("");
 
   async function uploadFile(file: File) {
     setUploading(true);
@@ -191,6 +195,104 @@ export function FieldInput({
       setUploading(false);
     }
   }
+
+  return (
+    <div className={wrapperClass}>
+      <Label field={field} id={id} />
+      <div className="flex gap-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={current}
+          alt=""
+          className="h-20 w-20 shrink-0 rounded-xl border border-navy-100 bg-sand object-cover"
+          onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.15")}
+        />
+        <div className="min-w-0 flex-1 space-y-2">
+          <input
+            id={id}
+            type="text"
+            inputMode="url"
+            required={field.required && !current}
+            value={current}
+            onChange={(e) => {
+              onChange(e.target.value);
+              setDimWarn("");
+            }}
+            placeholder="Paste an image link, or use Upload below"
+            className="input"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <label
+              className={cn(
+                "inline-flex cursor-pointer items-center gap-2 rounded-full border border-navy-200 px-4 py-2 text-xs font-bold text-navy-800 transition-colors hover:border-gold-400 hover:text-gold-800",
+                uploading && "pointer-events-none opacity-60",
+              )}
+            >
+              <Icon name="image" size={14} />
+              {uploading ? "Uploading…" : "Upload image"}
+              <input
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  // Check resolution before uploading — warn early.
+                  const objectUrl = URL.createObjectURL(file);
+                  const probe = new window.Image();
+                  probe.onload = () => {
+                    if (probe.naturalWidth < 1600) {
+                      setDimWarn(
+                        "This image is " + probe.naturalWidth + "×" + probe.naturalHeight + "px. For full-width banners, use at least 1920×1080 to avoid a blurry result.",
+                      );
+                    } else {
+                      setDimWarn("");
+                    }
+                    URL.revokeObjectURL(objectUrl);
+                  };
+                  probe.src = objectUrl;
+                  void uploadFile(file);
+                  e.currentTarget.value = "";
+                }}
+              />
+            </label>
+            {uploaded && (
+              <span className="chip bg-leaf-100 text-xs text-leaf-800">
+                <Icon name="check" size={12} />
+                Uploaded — stored in the database
+              </span>
+            )}
+          </div>
+          {dimWarn && (
+            <p className="rounded-lg bg-gold-50 px-3 py-2 text-[11px] font-semibold leading-relaxed text-gold-800">
+              ⚠ {dimWarn}
+            </p>
+          )}
+          <p className="text-[11px] leading-relaxed text-navy-400">
+            JPG, PNG, WebP, AVIF, GIF or SVG · up to 10 MB · stored directly in PostgreSQL ·
+            full-width banners look best at 1920px wide or more
+          </p>
+          {uploadError && <p className="text-[11px] font-semibold text-red-600">{uploadError}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function FieldInput({
+  field,
+  value,
+  options,
+  onChange,
+}: {
+  field: FieldConfig;
+  value: unknown;
+  options: Record<string, { value: string; label: string }[]>;
+  onChange: (value: unknown) => void;
+}) {
+  const id = `fld-${field.key}`;
+  const wrapperClass = field.half ? "sm:col-span-1 col-span-2" : "col-span-2";
 
   switch (field.type) {
     case "textarea":
@@ -267,67 +369,16 @@ export function FieldInput({
       );
     }
 
-    case "image": {
-      const current = String(value ?? "");
-      const uploaded = current.startsWith("/api/media/");
+    case "image":
       return (
-        <div className={wrapperClass}>
-          <Label field={field} id={id} />
-          <div className="flex gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={current}
-              alt=""
-              className="h-20 w-20 shrink-0 rounded-xl border border-navy-100 bg-sand object-cover"
-              onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.15")}
-            />
-            <div className="min-w-0 flex-1 space-y-2">
-              <input
-                id={id}
-                type="text"
-                inputMode="url"
-                required={field.required && !current}
-                value={current}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="Paste an image link, or use Upload below"
-                className="input"
-              />
-              <div className="flex flex-wrap items-center gap-2">
-                <label
-                  className={cn(
-                    "inline-flex cursor-pointer items-center gap-2 rounded-full border border-navy-200 px-4 py-2 text-xs font-bold text-navy-800 transition-colors hover:border-gold-400 hover:text-gold-800",
-                    uploading && "pointer-events-none opacity-60",
-                  )}
-                >
-                  <Icon name="image" size={14} />
-                  {uploading ? "Uploading…" : "Upload image"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="sr-only"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void uploadFile(file);
-                      e.currentTarget.value = "";
-                    }}
-                  />
-                </label>
-                {uploaded && (
-                  <span className="chip bg-leaf-100 text-xs text-leaf-800">
-                    <Icon name="check" size={12} />
-                    Uploaded — saved with this product
-                  </span>
-                )}
-              </div>
-              <p className="text-[11px] leading-relaxed text-navy-400">
-                JPG, PNG, WebP, AVIF, GIF or SVG · up to 5 MB · stored directly in PostgreSQL
-              </p>
-              {uploadError && <p className="text-[11px] font-semibold text-red-600">{uploadError}</p>}
-            </div>
-          </div>
-        </div>
+        <ImageFieldInput
+          field={field}
+          id={id}
+          value={value}
+          onChange={onChange}
+          wrapperClass={wrapperClass}
+        />
       );
-    }
 
     case "list":
       return (

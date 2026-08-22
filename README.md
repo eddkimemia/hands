@@ -60,6 +60,16 @@ Homepage copy · Impact statistics · Programs · Projects · Stories · Team me
 
 > Content lives in PostgreSQL (see above). The admin dashboard manages it all — no code edits needed for day-to-day content.
 
+### Shop & payments extras
+- **Cart + checkout** with admin-set delivery fees (KES for Kenya, USD internationally — per-product USD prices are set by admins, never auto-converted).
+- **Order on WhatsApp** deep links (number configurable in `src/lib/whatsapp.ts`).
+- **Image uploads** are stored in PostgreSQL (`media` table) and served from `/api/media/{id}`.
+- **Structured data**: Organization, Product, Service, Article, FAQPage and BreadcrumbList JSON-LD.
+
+### Maintenance scripts
+- `node scripts/enrich-programs.mjs` — re-applies long-form program content from `src/data/enriched-programs.json` to the live database.
+- `npm run db` — verify PostgreSQL connectivity.
+
 ### Honesty by design
 - No fabricated testimonials, partner logos, certificates or registration numbers anywhere.
 - Seeded stories are clearly labelled **"Illustrative"** until replaced with verified, consented stories.

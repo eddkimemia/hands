@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { FeaturedInitiative } from "@/components/home/FeaturedInitiative";
 import { Hero } from "@/components/home/Hero";
 import { HowYouCanHelp } from "@/components/home/HowYouCanHelp";
@@ -20,8 +21,22 @@ import {
   getStats,
   getStories,
 } from "@/lib/content";
+import { SITE_URL } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const homepage = await getHomepage();
+  return {
+    alternates: { canonical: SITE_URL },
+    openGraph: {
+      title: "Hands of Hope Foundation — Extending Hands. Inspiring Hope.",
+      description: homepage.heroSubtitle,
+      url: SITE_URL,
+      images: [{ url: homepage.heroImage, width: 1600, height: 900, alt: "Hands of Hope Foundation community" }],
+    },
+  };
+}
 
 export default async function HomePage() {
   const [homepage, stats, programs, featured, stories, reports, products] =

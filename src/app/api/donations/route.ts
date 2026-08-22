@@ -30,7 +30,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, message: "Intent received." });
   }
 
-  const amount = Number(body.amountKes);
+  const currency = body.currency === "USD" ? "USD" : "KES";
+  const minAmount = currency === "USD" ? 1 : 50;
+  const amount = Number(body.amountKes); // amount in the selected currency
   const frequency = body.frequency === "monthly" ? "monthly" : "once";
 
   const errors = validateFields(body, {
@@ -38,8 +40,11 @@ export async function POST(req: Request) {
     email: { required: true, email: true, max: 200, label: "Email" },
     phone: { max: 40, label: "Phone" },
   });
-  if (!Number.isFinite(amount) || amount < 50) {
-    errors.amountKes = "Please enter an amount of KES 50 or more.";
+  if (!Number.isFinite(amount) || amount < minAmount) {
+    errors.amountKes =
+      currency === "USD"
+        ? "Please enter an amount of $1 or more."
+        : "Please enter an amount of KES 50 or more.";
   }
   if (Object.keys(errors).length) {
     return NextResponse.json({ error: Object.values(errors)[0], errors }, { status: 422 });
@@ -48,7 +53,8 @@ export async function POST(req: Request) {
   const provider = getPaymentProvider();
   const intent: DonationIntent = {
     id: id("don"),
-    amountKes: Math.round(amount),
+    amountKes: Math.round(amount * 100) / 100, // amount in the intent's currency
+    currency,
     frequency,
     projectSlug: cleanStr(body.projectSlug, 100),
     donorName: body.anonymous ? "Anonymous friend" : cleanStr(body.donorName, 120)!,
