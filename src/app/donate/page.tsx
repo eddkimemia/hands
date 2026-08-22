@@ -4,6 +4,7 @@ import { faqJsonLd } from "@/lib/faq-schema";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { DonateWidget } from "@/components/site/DonateWidget";
+import { PageHero } from "@/components/site/PageHero";
 import { SectionHeader } from "@/components/site/Section";
 import { getProjects, getSettings } from "@/lib/content";
 
@@ -30,22 +31,12 @@ export default async function DonatePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-navy-950">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full border-[56px] border-navy-800/60" />
-          <div className="absolute right-1/4 top-10 h-24 w-24 rounded-full bg-gold-400/15 blur-2xl" />
-        </div>
-        <div className="container-x relative py-16 sm:py-20 lg:py-24">
-          <p className="eyebrow !text-gold-300 before:!bg-gold-400">Support Our Work</p>
-          <h1 className="h-display max-w-3xl text-4xl !text-white sm:text-5xl">
-            Your Generosity Becomes Someone&apos;s Turning Point
-          </h1>
-          <p className="lede mt-5 max-w-2xl !text-navy-200/90">
-            Every contribution — large or small, once or monthly — moves real programs forward.
-            Choose where your gift goes and we&apos;ll report back on what it achieved.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        crumbs={[{ href: "/donate", label: "Support Our Work" }]}
+        eyebrow="Support Our Work"
+        title="Your Generosity Becomes Someone's Turning Point"
+        description="Every contribution — large or small, once or monthly — moves real programs forward. Choose where your gift goes and we'll report back on what it achieved."
+      />
 
       <section className="section-pad bg-sand">
         <div className="container-x grid items-start gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">

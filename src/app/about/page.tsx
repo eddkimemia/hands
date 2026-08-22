@@ -151,12 +151,12 @@ export default async function AboutPage() {
             </article>
           </Reveal>
           <Reveal delay={120}>
-            <article className="card h-full bg-navy-950 p-8 sm:p-10">
-              <span className="flex items-center justify-center rounded-2xl bg-gold-400 p-3 text-navy-950 w-fit">
+            <article className="card h-full border-gold-200 bg-gold-50/60 p-8 sm:p-10">
+              <span className="flex w-fit items-center justify-center rounded-2xl bg-gold-400 p-3 text-navy-950">
                 <Icon name="eye" size={26} />
               </span>
-              <h2 className="mt-5 font-display text-2xl font-semibold !text-white">Our Vision</h2>
-              <p className="mt-3 leading-relaxed !text-navy-100/85">
+              <h2 className="mt-5 font-display text-2xl font-semibold text-navy-900">Our Vision</h2>
+              <p className="mt-3 leading-relaxed text-navy-800/85">
                 A Kenya where every community has the skills, resources and confidence to shape its
                 own future — and where hope is extended hand to hand, generation to generation.
               </p>

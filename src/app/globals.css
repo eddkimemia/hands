@@ -164,6 +164,13 @@ textarea.input {
   background-size: 100% 1.5px;
 }
 
+/* ---------- Mobile: skip slow zoom (tight crops look soft when scaled) ---------- */
+@media (max-width: 767px) {
+  .animate-kenburns {
+    animation: none !important;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {

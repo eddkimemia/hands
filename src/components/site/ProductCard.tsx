@@ -84,7 +84,7 @@ export function ProductCard({ product, orderHref, ctaHref, quickAdd = false }: P
               </>
             ) : (
               <>
-                <Icon name="shopping-bag" size={15} />
+                <Icon name="shopping-cart" size={15} />
                 {product.inStock ? "Add to Cart" : "Out of stock"}
               </>
             )}
@@ -100,13 +100,13 @@ export function ProductCard({ product, orderHref, ctaHref, quickAdd = false }: P
                   !product.inStock && "pointer-events-none opacity-50",
                 )}
               >
-                <Icon name="shopping-bag" size={15} />
+                <Icon name="shopping-cart" size={15} />
                 Choose options
               </Link>
             ) : (
               ctaHref && (
                 <Link href={ctaHref} className="btn-outline btn mt-4 w-full">
-                  <Icon name="shopping-bag" size={15} />
+                  <Icon name="shopping-cart" size={15} />
                   View in Shop
                 </Link>
               )

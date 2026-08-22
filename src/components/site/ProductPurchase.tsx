@@ -147,7 +147,7 @@ export function ProductPurchase({ product }: { product: PurchaseProduct }) {
             </>
           ) : (
             <>
-              <Icon name="shopping-bag" size={18} />
+              <Icon name="shopping-cart" size={18} />
               Add to Cart
             </>
           )}

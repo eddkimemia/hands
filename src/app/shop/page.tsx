@@ -34,7 +34,7 @@ export default async function ShopPage() {
           {/* How ordering works */}
           <div className="mb-16 grid gap-5 sm:grid-cols-3">
             {[
-              { icon: "shopping-bag" as const, title: "1 · Add to Cart", body: "Pick your items, sizes and colors — or order a single product straight from its page." },
+              { icon: "shopping-cart" as const, title: "1 · Add to Cart", body: "Pick your items, sizes and colors — or order a single product straight from its page." },
               { icon: "send" as const, title: "2 · Order Your Way", body: "Check out on site with delivery details, or send the pre-filled order to our team on WhatsApp." },
               { icon: "package" as const, title: "3 · Confirmed & Delivered", body: "We verify stock personally, arrange secure payment and deliver countrywide — no surprises." },
             ].map((s) => (

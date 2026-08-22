@@ -36,7 +36,7 @@ const WAYS: {
     accent: "bg-royal-50 text-royal-700",
   },
   {
-    icon: "shopping-bag",
+    icon: "shopping-cart",
     title: "Shop",
     body: "Purchase branded merchandise and support the organization's sustainability.",
     cta: "Visit Our Shop",

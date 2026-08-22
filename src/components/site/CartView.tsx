@@ -17,7 +17,7 @@ export function CartView() {
       <div className="mx-auto max-w-xl">
         <div className="card flex flex-col items-center p-12 text-center sm:p-16">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-navy-50 text-navy-300">
-            <Icon name="shopping-bag" size={30} />
+            <Icon name="shopping-cart" size={30} />
           </span>
           <h2 className="mt-6 font-display text-2xl font-semibold text-navy-900">
             Your cart is empty

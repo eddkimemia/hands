@@ -93,7 +93,7 @@ export function Header() {
               aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
               className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-navy-100 text-navy-900 transition-colors hover:bg-navy-50"
             >
-              <Icon name="shopping-bag" size={19} />
+              <Icon name="shopping-cart" size={19} />
               {count > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold-400 px-1 text-[10px] font-bold text-navy-950">
                   {count > 9 ? "9+" : count}
@@ -160,7 +160,7 @@ export function Header() {
                   </span>
                 )}
               </span>
-              <Icon name="shopping-bag" size={18} className="text-gold-600" />
+              <Icon name="shopping-cart" size={18} className="text-gold-600" />
             </Link>
           </nav>
           <div className="container-x mt-auto space-y-3 pb-10 pt-4">
