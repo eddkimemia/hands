@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
+import { cn } from "@/lib/utils";
 import type { ShopOrder } from "@/types";
 
 const STATUS_STYLES: Record<ShopOrder["status"], string> = {
@@ -19,6 +20,29 @@ export function OrderDetail({ order }: { order: ShopOrder }) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const [paid, setPaid] = useState(Boolean(order.paidAt));
+
+  async function togglePaid() {
+    setSaving(true);
+    setNotice("");
+    setError("");
+    const nextPaid = !paid;
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, paidAt: nextPaid ? new Date().toISOString() : "" }),
+      });
+      if (!res.ok) throw new Error("Update failed.");
+      setPaid(nextPaid);
+      setNotice(nextPaid ? "Marked as PAID." : "Marked as NOT PAID.");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Update failed.");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   const currency = order.currency ?? "KES";
   const fee = currency === "USD" ? order.deliveryFeeUsd ?? 0 : order.deliveryFeeKes;
@@ -80,10 +104,17 @@ export function OrderDetail({ order }: { order: ShopOrder }) {
               <li aria-hidden="true"><Icon name="arrow-right" size={11} /></li>
               <li><Link href="/admin/orders" className="hover:text-gold-700">Orders</Link></li>
               <li aria-hidden="true"><Icon name="arrow-right" size={11} /></li>
-              <li aria-current="page" className="font-mono text-navy-700">{order.id}</li>
+              <li aria-current="page" className="font-mono text-navy-700">{order.orderNumber ?? order.id}</li>
             </ol>
           </nav>
-          <h1 className="font-display text-2xl font-semibold text-navy-900 sm:text-3xl">Order {order.id}</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-2xl font-semibold text-navy-900 sm:text-3xl">
+              {order.orderNumber ?? order.id}
+            </h1>
+            <span className={`chip ${paid ? "bg-leaf-100 text-leaf-800" : "bg-red-50 text-red-600"}`}>
+              {paid ? "PAID" : "NOT PAID"}
+            </span>
+          </div>
           <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-navy-400">
             Placed {new Date(order.createdAt).toLocaleString("en-KE")}
           </p>
@@ -207,8 +238,18 @@ export function OrderDetail({ order }: { order: ShopOrder }) {
               <strong>fulfilled</strong> after delivery.
             </p>
 
-            <div className="mt-5 grid gap-3">
-              <a href={`/api/invoices/${order.id}`} target="_blank" rel="noopener noreferrer" className="btn-navy btn-sm w-full">
+            <button
+              type="button"
+              onClick={() => void togglePaid()}
+              disabled={saving}
+              className={cn("btn w-full", paid ? "bg-red-50 !text-red-700 border border-red-200 hover:bg-red-100" : "bg-leaf-600 !text-white hover:bg-leaf-700")}
+            >
+              <Icon name={paid ? "close" : "check"} size={15} />
+              {paid ? "Mark as NOT Paid" : "Mark as Paid"}
+            </button>
+
+            <div className="mt-2 grid gap-3">
+              <a href={`/api/invoices/${order.orderNumber ?? order.id}`} className="btn-navy btn-sm w-full">
                 <Icon name="download" size={15} />
                 Download Invoice (PDF)
               </a>

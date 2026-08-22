@@ -97,7 +97,7 @@ export function NewsletterForm() {
           className="mt-0.5 h-4 w-4 shrink-0 accent-gold-500"
         />
         <span>
-          I agree to receive email updates from Hands of Hope Foundation and understand I can
+          I agree to receive email updates from Ishara Charity and understand I can
           unsubscribe at any time. We handle your data according to our{" "}
           <a href="/privacy" className="font-semibold underline underline-offset-2">
             Privacy Policy

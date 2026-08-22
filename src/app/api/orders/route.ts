@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProductById, getSettings } from "@/lib/content";
-import { id, insertItem } from "@/lib/db";
+import { insertItem, nextOrderSeq } from "@/lib/db";
 import { sendOrderReceiptEmail } from "@/lib/mail";
 import { cleanStr, clientIp, isSpam, tooManyRequests, validateFields } from "@/lib/forms";
 import type { ShopOrder } from "@/types";
@@ -97,8 +97,12 @@ export async function POST(req: Request) {
   const town = cleanStr(body.town, 120)!;
   const deliveryAddress = [street, estate, town].filter(Boolean).join(", ").slice(0, 500);
 
+  const seq = await nextOrderSeq();
+  const orderId = `ORD-${seq}`;
+
   const order: ShopOrder = {
-    id: id("ord"),
+    id: orderId,
+    orderNumber: orderId,
     currency,
     items,
     deliveryFeeKes,
@@ -115,7 +119,7 @@ export async function POST(req: Request) {
     status: "new",
   };
 
-  await insertItem("orders", order.id, order);
+  await insertItem("orders", orderId, order);
 
   // Best-effort receipt email (PDF attached) — never blocks or fails the order.
   let emailed = false;
@@ -133,7 +137,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     ok: true,
-    reference: order.id,
+    reference: order.orderNumber ?? order.id,
     currency,
     emailed,
     totalKes: order.totalKes,

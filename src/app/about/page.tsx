@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 const ABOUT_FAQ: FaqItem[] = [
   {
-    question: "Is Hands of Hope Foundation only for certain tribes, religions or political groups?",
+    question: "Is Ishara Charity only for certain tribes, religions or political groups?",
     answer:
       "No. We serve Kenyans based on need alone. Our programs are open to every community regardless of ethnicity, faith, gender or background, and we keep our operations strictly non-political.",
   },
@@ -42,7 +42,7 @@ const ABOUT_FAQ: FaqItem[] = [
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about Hands of Hope Foundation — our story, mission, vision, values, leadership and governance as a Kenyan community foundation.",
+    "Learn about Ishara Charity — our story, mission, vision, values, leadership and governance as a Kenyan community foundation.",
 };
 
 const VALUES = [
@@ -112,7 +112,7 @@ export default async function AboutPage() {
             <SectionHeader eyebrow="Our Story" title="Born From a Simple Belief" align="left" className="!max-w-none" />
             <Reveal delay={100}>
               <p className="mt-4 leading-relaxed text-navy-800/80">
-                Hands of Hope Foundation began with a simple belief: that ordinary people, organized
+                Ishara Charity began with a simple belief: that ordinary people, organized
                 and supported, can transform their own communities. What started as neighbors helping
                 neighbors has grown into a foundation working across education, health, food security,
                 youth empowerment and community development.
@@ -335,7 +335,7 @@ export default async function AboutPage() {
         <div className="container-x max-w-3xl">
           <SectionHeader
             eyebrow="Common Questions"
-            title="About Hands of Hope Foundation"
+            title="About Ishara Charity"
             description="Straight answers about who we are and how we operate."
           />
           <Reveal delay={120}>

@@ -29,7 +29,7 @@ export function WhoWeAre({
           <div className="zoom-img relative aspect-[4/3] overflow-hidden rounded-3xl shadow-lift">
             <SmartImage
               src={image}
-              alt="A Hands of Hope volunteer working with a child in the community"
+              alt="A Ishara Charity volunteer working with a child in the community"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"

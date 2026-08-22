@@ -56,10 +56,10 @@ export function Header() {
         )}
       >
         <div className="container-x flex h-20 items-center justify-between gap-3 lg:h-24">
-          <Link href="/" aria-label="Hands of Hope Foundation — Home" className="shrink-0">
+          <Link href="/" aria-label="Ishara Charity — Home" className="shrink-0">
             <Image
               src="/logo/hopelogo.png"
-              alt="Hands of Hope Foundation"
+              alt="Ishara Charity"
               width={222}
               height={125}
               priority

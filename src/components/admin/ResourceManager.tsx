@@ -107,10 +107,11 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
                     <div className="flex justify-end gap-1.5">
                       <button
                         onClick={() => router.push(`/admin/${config.key}/${item.id}`)}
-                        aria-label={`Edit ${String(item[config.titleField])}`}
+                        aria-label={`Open ${config.customView === "order" ? "order" : String(item[config.titleField])}`}
+                        title={config.customView === "order" ? "View order" : "Edit"}
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-navy-100 text-navy-600 transition-colors hover:bg-navy-900 hover:text-white"
                       >
-                        <Icon name="edit" size={14} />
+                        <Icon name={config.customView === "order" ? "file-text" : "edit"} size={14} />
                       </button>
                       <button
                         onClick={() => handleDelete(item)}

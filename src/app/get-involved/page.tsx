@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Get Involved",
   description:
-    "Volunteer, donate, partner, fundraise or join our team — find your place at Hands of Hope Foundation and use your skills for communities across Kenya.",
+    "Volunteer, donate, partner, fundraise or join our team — find your place at Ishara Charity and use your skills for communities across Kenya.",
 };
 
 const GET_INVOLVED_FAQ: FaqItem[] = [
@@ -47,7 +47,7 @@ const GET_INVOLVED_FAQ: FaqItem[] = [
   {
     question: "Can my company send a team?",
     answer:
-      "Absolutely — employee volunteering days are among our favourite partnerships. Email partnerships@handsofhope.org and we will design a day that is useful to communities and meaningful for your team.",
+      "Absolutely — employee volunteering days are among our favourite partnerships. Email partnerships@isharacharity.org and we will design a day that is useful to communities and meaningful for your team.",
   },
 ];
 

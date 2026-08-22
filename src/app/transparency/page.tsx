@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Transparency",
   description:
-    "Hands of Hope Foundation's commitment to transparency — annual reports, financial summaries, governance, registration information and policies.",
+    "Ishara Charity's commitment to transparency — annual reports, financial summaries, governance, registration information and policies.",
 };
 
 const CATEGORY_ICONS: Record<string, "file-text" | "wallet" | "target" | "shield" | "award" | "globe"> = {

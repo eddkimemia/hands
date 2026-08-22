@@ -13,7 +13,7 @@ export function Logo({ variant = "dark", compact = false, className }: LogoProps
     <span className={cn("inline-flex items-center", className)}>
       <Image
         src="/logo/hopelogo.png"
-        alt="Hands of Hope Foundation"
+        alt="Ishara Charity"
         width={222}
         height={125}
         className={cn("w-auto", compact ? "h-12" : "h-16 sm:h-20")}

@@ -26,7 +26,7 @@ export async function generateMetadata({
     description: program.summary,
     alternates: { canonical: `${SITE_URL}/programs/${program.slug}` },
     openGraph: {
-      title: `${program.name} | Hands of Hope Foundation`,
+      title: `${program.name} | Ishara Charity`,
       description: program.summary,
       images: [{ url: program.image }],
       type: "article",

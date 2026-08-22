@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Stories",
   description:
-    "Stories of hope and change from Kenyan communities — shared with consent, told with dignity by Hands of Hope Foundation.",
+    "Stories of hope and change from Kenyan communities — shared with consent, told with dignity by Ishara Charity.",
 };
 
 export default async function StoriesPage() {

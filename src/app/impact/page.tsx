@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Our Impact",
   description:
-    "See the difference Hands of Hope Foundation is making — verified statistics, live project progress, reports and stories of change across Kenya.",
+    "See the difference Ishara Charity is making — verified statistics, live project progress, reports and stories of change across Kenya.",
 };
 
 export default async function ImpactPage() {

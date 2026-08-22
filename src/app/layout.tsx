@@ -7,6 +7,7 @@ import { FloatingChat } from "@/components/site/FloatingChat";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { HideOnAdmin } from "@/components/site/HideOnAdmin";
+import { TopBar } from "@/components/site/TopBar";
 import { getSettings } from "@/lib/content";
 import { SITE_URL } from "@/lib/utils";
 import "./globals.css";
@@ -25,11 +26,11 @@ const sans = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Hands of Hope Foundation — Extending Hands. Inspiring Hope.",
-    template: "%s | Hands of Hope Foundation",
+    default: "Ishara Charity — Extending Hands. Inspiring Hope.",
+    template: "%s | Ishara Charity",
   },
   description:
-    "Hands of Hope Foundation is a Kenyan community foundation improving lives through compassion, empowerment, education, health support, food security and community development.",
+    "Ishara Charity is a Kenyan community foundation improving lives through compassion, empowerment, education, health support, food security and community development.",
   keywords: [
     "NGO Kenya",
     "community foundation Kenya",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_KE",
-    siteName: "Hands of Hope Foundation",
+    siteName: "Ishara Charity",
     url: SITE_URL,
   },
   twitter: { card: "summary_large_image" },
@@ -59,7 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     "@context": "https://schema.org",
     "@type": "NGO",
     name: settings.orgName,
-    alternateName: "Hands of Hope",
+    alternateName: "Ishara Charity",
     slogan: settings.tagline,
     description: settings.missionShort,
     url: SITE_URL,

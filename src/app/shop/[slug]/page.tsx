@@ -25,7 +25,7 @@ export async function generateMetadata({
     description: product.description,
     alternates: { canonical: `${SITE_URL}/shop/${product.slug}` },
     openGraph: {
-      title: `${product.name} | Hands of Hope Shop`,
+      title: `${product.name} | Ishara Charity Shop`,
       description: product.description,
       images: [{ url: product.image }],
       type: "website",
@@ -145,8 +145,8 @@ export default async function ProductOrderPage({
                   </p>
                   <p className="mx-auto mt-2 max-w-sm text-sm text-navy-600">
                     Email{" "}
-                    <a href="mailto:info@handsofhope.org" className="font-semibold underline underline-offset-2">
-                      info@handsofhope.org
+                    <a href="mailto:info@isharacharity.org" className="font-semibold underline underline-offset-2">
+                      info@isharacharity.org
                     </a>{" "}
                     and we&apos;ll let you know as soon as it&apos;s back.
                   </p>

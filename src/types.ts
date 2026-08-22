@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ */
-/*  Hands of Hope Foundation — shared content types                    */
+/*  Ishara Charity — shared content types                    */
 /* ------------------------------------------------------------------ */
 
 export interface SiteSettings {
@@ -13,6 +13,7 @@ export interface SiteSettings {
   location: string;
   deliveryFeeKes: number;
   deliveryFeeUsd: number;
+  whatsappGroupUrl: string;
   registrationNote: string;
   socials: { label: string; url: string }[];
 }
@@ -203,6 +204,10 @@ export interface DonationIntent {
 
 export interface ShopOrder {
   id: string;
+  /** Short human-friendly reference (e.g. ORD-1001). Falls back to id. */
+  orderNumber?: string;
+  /** Set when payment has been verified by our team. */
+  paidAt?: string;
   currency: "KES" | "USD";
   items: { productId: string; name: string; priceKes: number; priceUsd?: number; size?: string; color?: string; qty: number }[];
   deliveryFeeKes: number;

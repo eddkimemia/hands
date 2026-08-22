@@ -3,13 +3,13 @@ import { PageHero } from "@/components/site/PageHero";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
-  description: "Terms governing use of the Hands of Hope Foundation website.",
+  description: "Terms governing use of the Ishara Charity website.",
 };
 
 const TERMS = [
   {
     title: "1. Using this site",
-    body: "This website is provided by Hands of Hope Foundation for information about our mission, programs and ways to get involved. You agree to use it lawfully and respectfully, and not to misuse forms, attempt unauthorized access, or copy content for commercial purposes without written permission.",
+    body: "This website is provided by Ishara Charity for information about our mission, programs and ways to get involved. You agree to use it lawfully and respectfully, and not to misuse forms, attempt unauthorized access, or copy content for commercial purposes without written permission.",
   },
   {
     title: "2. Content & accuracy",
@@ -21,7 +21,7 @@ const TERMS = [
   },
   {
     title: "4. Intellectual property",
-    body: "The Hands of Hope name, logo, photographs and written content belong to the Foundation or are used with permission. You're welcome to share our public pages and materials non-commercially with attribution.",
+    body: "The Ishara Charity name, logo, photographs and written content belong to the Foundation or are used with permission. You're welcome to share our public pages and materials non-commercially with attribution.",
   },
   {
     title: "5. External links",

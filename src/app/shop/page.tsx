@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Shop",
   description:
-    "Wear the mission. Hands of Hope branded merchandise — every purchase supports our community programs across Kenya.",
+    "Wear the mission. Ishara Charity branded merchandise — every purchase supports our community programs across Kenya.",
 };
 
 export default async function ShopPage() {
@@ -26,7 +26,7 @@ export default async function ShopPage() {
         crumbs={[{ href: "/shop", label: "Shop" }]}
         eyebrow="Merchandise"
         title="Wear the Mission"
-        description="Quality merchandise that carries our story — and funds it. Proceeds support Hands of Hope programs, in line with our financial policies."
+        description="Quality merchandise that carries our story — and funds it. Proceeds support Ishara Charity programs, in line with our financial policies."
       />
 
       <section className="section-pad">

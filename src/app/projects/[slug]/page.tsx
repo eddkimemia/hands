@@ -23,7 +23,7 @@ export async function generateMetadata({
     description: project.summary,
     alternates: { canonical: `${SITE_URL}/projects/${project.slug}` },
     openGraph: {
-      title: `${project.name} | Hands of Hope Foundation`,
+      title: `${project.name} | Ishara Charity`,
       description: project.summary,
       images: [{ url: project.image }],
       type: "article",

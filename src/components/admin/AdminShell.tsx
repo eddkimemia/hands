@@ -35,9 +35,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               <Icon name={open ? "close" : "menu"} size={20} />
             </button>
             <Link href="/admin" className="flex items-center gap-2.5">
-              <Image src="/logo/hopelogo.png" alt="Hands of Hope Foundation" width={64} height={36} className="h-9 w-auto" />
+              <Image src="/logo/hopelogo.png" alt="Ishara Charity" width={64} height={36} className="h-9 w-auto" />
               <span className="font-display text-lg font-semibold text-navy-900">
-                Hope Admin
+                Ishara Admin
               </span>
             </Link>
           </div>

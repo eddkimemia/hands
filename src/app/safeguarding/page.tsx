@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Safeguarding",
   description:
-    "Hands of Hope Foundation's safeguarding commitment — protecting children and vulnerable adults in everything we do.",
+    "Ishara Charity's safeguarding commitment — protecting children and vulnerable adults in everything we do.",
 };
 
 const COMMITMENTS = [

@@ -30,7 +30,7 @@ const WAYS: {
   {
     icon: "handshake",
     title: "Partner",
-    body: "Businesses and organizations can collaborate with Hands of Hope on shared goals.",
+    body: "Businesses and organizations can collaborate with Ishara Charity on shared goals.",
     cta: "Partner With Us",
     href: "/get-involved#partner",
     accent: "bg-royal-50 text-royal-700",

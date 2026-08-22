@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Our Projects",
   description:
-    "Follow Hands of Hope Foundation projects across Kenya — with live progress, people reached and ways to support each initiative.",
+    "Follow Ishara Charity projects across Kenya — with live progress, people reached and ways to support each initiative.",
 };
 
 export default async function ProjectsPage() {

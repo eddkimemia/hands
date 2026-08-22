@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Donate — Support Our Work",
   description:
-    "Support Hands of Hope Foundation's community programs across Kenya. Give once or monthly, to a project of your choice.",
+    "Support Ishara Charity's community programs across Kenya. Give once or monthly, to a project of your choice.",
 };
 
 const WHAT_YOUR_GIFT_DOES = [
@@ -198,6 +198,6 @@ const DONATE_FAQ: FaqItem[] = [
   {
     question: "Can I give via M-Pesa or bank transfer?",
     answer:
-      "Yes — email info@handsofhope.org and we will share secure payment details plus an official acknowledgement. Our online checkout architecture also supports M-Pesa as payments are connected.",
+      "Yes — email info@isharacharity.org and we will share secure payment details plus an official acknowledgement. Our online checkout architecture also supports M-Pesa as payments are connected.",
   },
 ];

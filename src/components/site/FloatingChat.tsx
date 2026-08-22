@@ -27,7 +27,7 @@ const TOPICS: { label: string; icon: "users" | "heart" | "handshake" | "shopping
     label: "Partnerships",
     icon: "handshake",
     q: "We're a company — how do we partner?",
-    a: "We design corporate partnerships around shared goals and transparent reporting. Email partnerships@handsofhope.org or start from Get Involved → Partner With Us.",
+    a: "We design corporate partnerships around shared goals and transparent reporting. Email partnerships@isharacharity.org or start from Get Involved → Partner With Us.",
   },
   {
     label: "Shop orders",
@@ -43,7 +43,7 @@ export function FloatingChat() {
   const [bubbles, setBubbles] = useState<Bubble[]>([
     {
       from: "bot",
-      text: "Jambo! Welcome to Hands of Hope. Pick a topic below or send us a message — a real person reads everything.",
+      text: "Jambo! Welcome to Ishara Charity. Pick a topic below or send us a message — a real person reads everything.",
     },
   ]);
   const [name, setName] = useState("");
@@ -90,7 +90,7 @@ export function FloatingChat() {
         ...b,
         {
           from: "bot",
-          text: "Sorry — the message couldn't be sent right now. Please try again or email info@handsofhope.org.",
+          text: "Sorry — the message couldn't be sent right now. Please try again or email info@isharacharity.org.",
         },
       ]);
     } finally {
@@ -107,7 +107,7 @@ export function FloatingChat() {
           open ? "visible translate-y-0 opacity-100" : "invisible translate-y-4 opacity-0",
         )}
         role="dialog"
-        aria-label="Chat with Hands of Hope"
+        aria-label="Chat with Ishara Charity"
         aria-hidden={!open}
       >
         <div className="flex items-center gap-3 bg-navy-950 px-5 py-4">

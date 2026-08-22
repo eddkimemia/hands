@@ -3,13 +3,13 @@ import { PageHero } from "@/components/site/PageHero";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Hands of Hope Foundation collects, uses and protects your personal information.",
+  description: "How Ishara Charity collects, uses and protects your personal information.",
 };
 
 const SECTIONS = [
   {
     title: "1. Who we are",
-    body: "Hands of Hope Foundation ('we', 'us') is a community foundation working in Kenya. This policy explains how we handle personal information across our website, programs, events and communications. For any privacy question or request, contact us using the details on our Contact page.",
+    body: "Ishara Charity ('we', 'us') is a community foundation working in Kenya. This policy explains how we handle personal information across our website, programs, events and communications. For any privacy question or request, contact us using the details on our Contact page.",
   },
   {
     title: "2. What we collect",

@@ -16,7 +16,7 @@ import type { DatabaseShape } from "@/types";
 /* ------------------------------------------------------------------ */
 
 const CONNECTION_STRING =
-  process.env.DATABASE_URL || "postgres://postgres:password@localhost:5433/handsofhope";
+  process.env.DATABASE_URL || "postgres://postgres:password@localhost:5433/isharacharity";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -31,7 +31,7 @@ function pool(): Pool {
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 20_000,
       // Retry once on transient connection drops (e.g. local PG waking up).
-      application_name: "handsofhope",
+      application_name: "isharacharity",
     });
     global.__hhPool.on("error", (err) => console.error("[db] pool error", err.message));
   }
@@ -238,6 +238,22 @@ export async function findItemByField<T = Record<string, unknown>>(
 export async function queryClient(): Promise<PoolClient> {
   await ensureDatabase();
   return pool().connect();
+}
+
+/* --------------------------- order numbering ---------------------------- */
+
+/**
+ * Returns the next short, human-friendly order number (ORD-1001, ORD-1002…).
+ */
+export async function nextOrderSeq(): Promise<number> {
+  await ensureDatabase();
+  const { rows } = await pool().query<{ n: number }>(
+    `SELECT count(*)::int AS n FROM content WHERE collection = 'orders'`,
+  );
+  let seq = 1000 + (rows[0]?.n ?? 0) + 1;
+  // Guarantee uniqueness even if old rows were deleted and numbers reused.
+  while (await getItem("orders", `ORD-${seq}`)) seq += 1;
+  return seq;
 }
 
 /* ------------------------------- media ---------------------------------- */

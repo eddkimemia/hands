@@ -448,7 +448,7 @@ export const RESOURCES: ResourceConfig[] = [
     hideCreate: true,
     titleField: "customerName",
     subtitleField: "deliveryAddress",
-    columns: ["customerName", "totalKes", "currency", "status"],
+    columns: ["orderNumber", "customerName", "totalKes", "currency", "status"],
     customView: "order",
     fields: [
       { key: "customerName", label: "Customer", type: "text" },
@@ -492,6 +492,12 @@ export const RESOURCES: ResourceConfig[] = [
         type: "number",
         half: true,
         help: "Shown to visitors outside Kenya",
+      },
+      {
+        key: "whatsappGroupUrl",
+        label: "WhatsApp community invite link",
+        type: "text",
+        help: "Paste the group invite URL to show the “Join our WhatsApp” bar sitewide. Leave empty to hide it.",
       },
       { key: "registrationNote", label: "Registration note", type: "textarea" },
       {

@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Our Programs",
   description:
-    "Explore Hands of Hope Foundation's programs: health & wellbeing, education, food security, youth empowerment, community development and emergency support across Kenya.",
+    "Explore Ishara Charity's programs: health & wellbeing, education, food security, youth empowerment, community development and emergency support across Kenya.",
 };
 
 export default async function ProgramsPage() {

@@ -81,6 +81,8 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
       setMessage(json.message);
       setBuyerEmail(String(payload.email));
       setEmailed(Boolean(json.emailed));
+      // Orders placed here are completed with our team — payment is NOT
+      // collected online at this step, so the receipt starts as unpaid.
       clear();
     } catch (err) {
       setStatus("error");
@@ -122,7 +124,11 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
             <Icon name="check" size={30} />
           </span>
-          <h2 className="mt-6 font-display text-2xl font-semibold text-navy-900">Order placed!</h2>
+          <span className="chip mt-5 bg-red-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-red-600 ring-1 ring-red-200">
+            <Icon name="close" size={12} />
+            Not paid yet
+          </span>
+          <h2 className="mt-4 font-display text-2xl font-semibold text-navy-900">Order placed!</h2>
           <p className="mt-3 text-sm leading-relaxed text-navy-700">{message}</p>
           {orderRef && (
             <p className="mt-3 text-xs text-navy-500">

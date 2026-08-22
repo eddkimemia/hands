@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Reach Hands of Hope Foundation — general enquiries, partnerships, programs and volunteering contacts in Nairobi, Kenya.",
+    "Reach Ishara Charity — general enquiries, partnerships, programs and volunteering contacts in Nairobi, Kenya.",
 };
 
 export default async function ContactPage() {
@@ -144,7 +144,7 @@ export default async function ContactPage() {
             <Reveal delay={390}>
               <div className="overflow-hidden rounded-2xl border border-navy-100 shadow-card">
                 <iframe
-                  title="Map showing Hands of Hope Foundation location in Westlands, Nairobi"
+                  title="Map showing Ishara Charity location in Westlands, Nairobi"
                   src="https://www.openstreetmap.org/export/embed.html?bbox=36.7860%2C-1.2830%2C36.8180%2C-1.2440&layer=mapnik&marker=-1.2627%2C36.8018"
                   className="h-64 w-full"
                   loading="lazy"

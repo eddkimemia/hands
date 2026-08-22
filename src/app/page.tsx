@@ -30,10 +30,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     alternates: { canonical: SITE_URL },
     openGraph: {
-      title: "Hands of Hope Foundation — Extending Hands. Inspiring Hope.",
+      title: "Ishara Charity — Extending Hands. Inspiring Hope.",
       description: homepage.heroSubtitle,
       url: SITE_URL,
-      images: [{ url: homepage.heroImage, width: 1600, height: 900, alt: "Hands of Hope Foundation community" }],
+      images: [{ url: homepage.heroImage, width: 1600, height: 900, alt: "Ishara Charity community" }],
     },
   };
 }

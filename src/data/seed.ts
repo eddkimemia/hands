@@ -54,29 +54,30 @@ const now = () => new Date().toISOString();
 export function buildSeed(): DatabaseShape {
   const seed: DatabaseShape = {
     settings: {
-      orgName: "Hands of Hope Foundation",
+      orgName: "Ishara Charity",
       tagline: "Extending Hands. Inspiring Hope.",
       missionShort:
         "A Kenyan community foundation improving lives through compassion, empowerment, education, health support and food security.",
-      emailGeneral: "info@handsofhope.org",
-      emailPartnerships: "partnerships@handsofhope.org",
-      emailPrograms: "programs@handsofhope.org",
+      emailGeneral: "info@isharacharity.org",
+      emailPartnerships: "partnerships@isharacharity.org",
+      emailPrograms: "programs@isharacharity.org",
       phone: "+254 715 135 141",
       location: "Rhapta Road, Westlands, Nairobi, Kenya",
       deliveryFeeKes: 350,
       deliveryFeeUsd: 10,
+      whatsappGroupUrl: "",
       registrationNote:
-        "Hands of Hope Foundation is a community foundation working across Kenya. Registration details and governance documents are published on our Transparency page.",
+        "Ishara Charity is a community foundation working across Kenya. Registration details and governance documents are published on our Transparency page.",
       socials: [
-        { label: "Facebook", url: "https://facebook.com/handsofhopekenya" },
-        { label: "Instagram", url: "https://instagram.com/handsofhopekenya" },
-        { label: "X", url: "https://x.com/handsofhopekenya" },
-        { label: "LinkedIn", url: "https://linkedin.com/company/handsofhopekenya" },
+        { label: "Facebook", url: "https://facebook.com/isharacharity" },
+        { label: "Instagram", url: "https://instagram.com/isharacharity" },
+        { label: "X", url: "https://x.com/isharacharity" },
+        { label: "LinkedIn", url: "https://linkedin.com/company/isharacharity" },
       ],
     },
 
     homepage: {
-      heroKicker: "Hands of Hope Foundation • Kenya",
+      heroKicker: "Ishara Charity • Kenya",
       heroTitleTop: "Extending Hands.",
       heroTitleAccent: "Inspiring Hope.",
       heroSubtitle:
@@ -89,16 +90,16 @@ export function buildSeed(): DatabaseShape {
       ],
       whoWeAreHeading: "Hope Begins With Us",
       whoWeAreBody:
-        "Hands of Hope Foundation exists to bring practical support and sustainable opportunities to communities across Kenya — while empowering people to become agents of positive change in their own lives.\n\nWe work shoulder-to-shoulder with local leaders, schools, health facilities and families. Every initiative starts by listening, and every program is built to outlast our presence: skills stay, knowledge stays, and hope becomes self-sustaining.",
+        "Ishara Charity exists to bring practical support and sustainable opportunities to communities across Kenya — while empowering people to become agents of positive change in their own lives.\n\nWe work shoulder-to-shoulder with local leaders, schools, health facilities and families. Every initiative starts by listening, and every program is built to outlast our presence: skills stay, knowledge stays, and hope becomes self-sustaining.",
       whoWeAreImage: IMG.whoWeAre,
       featuredProjectSlug: "project-hope",
       sustainabilityHeading: "Creating Sustainable Impact",
       sustainabilityBody:
-        "Hands of Hope is building a modern nonprofit model — one that develops partnerships, training programs, community enterprises, merchandise and events so that our impact does not depend on donations alone.\n\nRevenue generated through these initiatives is reinvested into community programs, strengthening our long-term ability to serve.",
+        "Ishara Charity is building a modern nonprofit model — one that develops partnerships, training programs, community enterprises, merchandise and events so that our impact does not depend on donations alone.\n\nRevenue generated through these initiatives is reinvested into community programs, strengthening our long-term ability to serve.",
       sustainabilityImage: IMG.handsPlant,
       volunteerCtaHeading: "Your Skills Can Change a Life",
       volunteerCtaBody:
-        "Whether you have professional expertise, practical skills, time or simply a desire to serve, there is a place for you at Hands of Hope.",
+        "Whether you have professional expertise, practical skills, time or simply a desire to serve, there is a place for you at Ishara Charity.",
       volunteerCtaImage: IMG.volunteerWomen,
       newsletterHeading: "Stay Connected to the Hope",
       newsletterBody:
@@ -352,7 +353,7 @@ export function buildSeed(): DatabaseShape {
           "When three teachers left a rural primary school, enrolment collapsed. Two years later, the classrooms are full again — here is what changed.",
         body: [
           "By 2023, the upper primary classrooms at a partner school in Kakamega had emptied. Families had lost confidence, three teachers had been transferred, and several children had quietly dropped off the register.",
-          "Working with the head teacher and parents' association, Hands of Hope supported a simple plan: restore learning materials, restart the school feeding porridge, and bring mentors in twice a month.",
+          "Working with the head teacher and parents' association, Ishara Charity supported a simple plan: restore learning materials, restart the school feeding porridge, and bring mentors in twice a month.",
           "Attendance climbed term by term. Teachers reported children staying late to read. When exam results improved, the community's belief returned with them.",
           "This account is an illustrative example prepared for demonstration. Verified, consented stories from the communities we serve will replace it as documentation is completed.",
         ],
@@ -421,7 +422,7 @@ export function buildSeed(): DatabaseShape {
         slug: "hope-tshirt",
         name: "Hope Signature Tee",
         description:
-          "Soft, breathable cotton tee with the Hands of Hope mark stitched on the chest. Pre-shrunk and cut for everyday comfort — wear it on campus, at work or on outreach days. Every tee sparks conversations about the mission.",
+          "Soft, breathable cotton tee with the Ishara Charity mark stitched on the chest. Pre-shrunk and cut for everyday comfort — wear it on campus, at work or on outreach days. Every tee sparks conversations about the mission.",
         priceKes: 2500,
         priceUsd: 19,
         image: IMG.shopTee,
@@ -449,7 +450,7 @@ export function buildSeed(): DatabaseShape {
         slug: "hope-cap",
         name: "Rise Cap",
         description:
-          "A classic six-panel cap with an adjustable strap and the Hands of Hope sun emblem up front. Shades your eyes during outreach days and carries the story everywhere you go.",
+          "A classic six-panel cap with an adjustable strap and the Ishara Charity sun emblem up front. Shades your eyes during outreach days and carries the story everywhere you go.",
         priceKes: 1500,
         priceUsd: 12,
         image: IMG.shopCap,

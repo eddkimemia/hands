@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Checkout",
-  description: "Complete your Hands of Hope merchandise order — delivery across Kenya and worldwide.",
+  description: "Complete your Ishara Charity merchandise order — delivery across Kenya and worldwide.",
   robots: { index: false, follow: true },
 };
 

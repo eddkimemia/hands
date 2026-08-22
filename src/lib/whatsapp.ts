@@ -11,7 +11,7 @@ export function buildWhatsAppOrderUrl(
   items: Pick<CartItem, "name" | "qty" | "size" | "color" | "priceKes">[],
   opts?: { note?: string },
 ): string {
-  const lines: string[] = ["Hello Hands of Hope Foundation! I would like to order:", ""];
+  const lines: string[] = ["Hello Ishara Charity! I would like to order:", ""];
 
   let total = 0;
   items.forEach((item, i) => {

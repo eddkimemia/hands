@@ -4,7 +4,7 @@ import { CartView } from "@/components/site/CartView";
 
 export const metadata: Metadata = {
   title: "Your Cart",
-  description: "Review your Hands of Hope merchandise order — checkout here or order directly on WhatsApp.",
+  description: "Review your Ishara Charity merchandise order — checkout here or order directly on WhatsApp.",
   robots: { index: false, follow: true },
 };
 

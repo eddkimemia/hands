@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getItem, updateItem } from "@/lib/db";
+import { findItemByField, getItem, updateItem } from "@/lib/db";
 import { generateInvoicePdf } from "@/lib/invoice";
 import { sendOrderReceiptEmail } from "@/lib/mail";
 import type { ShopOrder } from "@/types";
@@ -10,7 +10,11 @@ export const runtime = "nodejs";
 type Ctx = { params: Promise<{ orderId: string }> };
 
 async function loadOrder(orderId: string): Promise<ShopOrder | undefined> {
-  return getItem<ShopOrder>("orders", orderId);
+  // Accept both the internal id and the short public reference (ORD-1001).
+  return (
+    (await getItem<ShopOrder>("orders", orderId)) ??
+    (await findItemByField<ShopOrder>("orders", "orderNumber", orderId))
+  );
 }
 
 /**
