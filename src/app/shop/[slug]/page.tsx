@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { OrderForm } from "@/components/site/OrderForm";
+import { ProductPurchase } from "@/components/site/ProductPurchase";
 import { SmartImage } from "@/components/SmartImage";
 import { getProductById, getProducts } from "@/lib/content";
 import { formatKes, SITE_URL } from "@/lib/utils";
@@ -80,25 +80,37 @@ export default async function ProductOrderPage({
             </div>
           </div>
 
-          {/* Details + order form */}
+          {/* Details + purchase panel */}
           <div>
             <h1 className="h-display text-3xl sm:text-4xl">{product.name}</h1>
-            <p className="lede mt-3">{product.description}</p>
+            <p className="mt-3 inline-block rounded-full bg-gold-100 px-4 py-1.5 font-display text-xl font-semibold text-gold-800">
+              {formatKes(product.priceKes)}
+              {product.priceUsd ? (
+                <span className="ml-2 text-sm font-bold text-navy-500">/ ${product.priceUsd}</span>
+              ) : null}
+            </p>
+            <div className="mt-4 space-y-3 leading-relaxed text-navy-800/85">
+              <p>{product.description}</p>
+            </div>
+
             {(product.colors?.length ?? 0) > 0 && (
-              <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-navy-700">
-                <Icon name="spark" size={15} className="text-gold-600" />
-                Colours: {product.colors!.join(", ")}
+              <p className="mt-4 text-sm font-semibold text-navy-700">
+                Available in: {product.colors!.join(", ")}
               </p>
             )}
 
             <div className="mt-7">
               {product.inStock ? (
-                <OrderForm
+                <ProductPurchase
                   product={{
                     id: product.id,
+                    slug: product.slug,
                     name: product.name,
                     priceKes: product.priceKes,
+                    priceUsd: product.priceUsd,
+                    image: product.image,
                     sizes: product.sizes ?? [],
+                    colors: product.colors ?? [],
                   }}
                 />
               ) : (
@@ -117,11 +129,20 @@ export default async function ProductOrderPage({
               )}
             </div>
 
-            <p className="mt-6 rounded-2xl bg-leaf-50 px-5 py-4 text-xs leading-relaxed text-leaf-900">
-              <Icon name="heart" size={13} className="mr-1.5 inline align-[-2px]" />
-              Every purchase supports the organization&apos;s sustainability and community programs,
-              subject to our published financial policies.
-            </p>
+            <ul className="mt-6 grid gap-2.5 text-xs text-navy-600">
+              <li className="flex items-start gap-2">
+                <Icon name="check-circle" size={14} className="mt-0.5 shrink-0 text-leaf-600" />
+                Every purchase supports the organization&apos;s sustainability and community programs.
+              </li>
+              <li className="flex items-start gap-2">
+                <Icon name="check-circle" size={14} className="mt-0.5 shrink-0 text-leaf-600" />
+                Countrywide delivery arranged personally by our shop team.
+              </li>
+              <li className="flex items-start gap-2">
+                <Icon name="check-circle" size={14} className="mt-0.5 shrink-0 text-leaf-600" />
+                No prepayment required — you confirm everything before paying.
+              </li>
+            </ul>
           </div>
         </div>
 

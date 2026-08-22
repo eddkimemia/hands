@@ -11,6 +11,8 @@ export interface SiteSettings {
   emailPrograms: string;
   phone: string;
   location: string;
+  deliveryFeeKes: number;
+  deliveryFeeUsd: number;
   registrationNote: string;
   socials: { label: string; url: string }[];
 }
@@ -128,6 +130,7 @@ export interface Product {
   name: string;
   description: string;
   priceKes: number;
+  priceUsd?: number;
   image: string;
   sizes?: string[];
   colors?: string[];
@@ -194,8 +197,12 @@ export interface DonationIntent {
 
 export interface ShopOrder {
   id: string;
-  items: { productId: string; name: string; priceKes: number; size?: string; color?: string; qty: number }[];
+  currency: "KES" | "USD";
+  items: { productId: string; name: string; priceKes: number; priceUsd?: number; size?: string; color?: string; qty: number }[];
+  deliveryFeeKes: number;
   totalKes: number;
+  deliveryFeeUsd?: number;
+  totalUsd?: number;
   customerName: string;
   email: string;
   phone?: string;

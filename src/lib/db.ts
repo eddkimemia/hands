@@ -69,6 +69,16 @@ export async function ensureDatabase(): Promise<void> {
       await client.query(
         `CREATE INDEX IF NOT EXISTS content_collection_idx ON content (collection)`,
       );
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS media (
+          id TEXT PRIMARY KEY,
+          filename TEXT NOT NULL,
+          mime TEXT NOT NULL,
+          bytes INTEGER NOT NULL,
+          data BYTEA NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+        )
+      `);
 
       const { rows } = await client.query<{ count: string }>(
         `SELECT count(*)::text AS count FROM content`,
@@ -228,4 +238,44 @@ export async function findItemByField<T = Record<string, unknown>>(
 export async function queryClient(): Promise<PoolClient> {
   await ensureDatabase();
   return pool().connect();
+}
+
+/* ------------------------------- media ---------------------------------- */
+
+export interface MediaRow {
+  id: string;
+  filename: string;
+  mime: string;
+  bytes: number;
+}
+
+/** Stores an uploaded image in PostgreSQL and returns its serving URL. */
+export async function saveMedia(
+  filename: string,
+  mime: string,
+  data: Buffer,
+): Promise<{ id: string; url: string }> {
+  await ensureDatabase();
+  const mediaId = id("m");
+  await pool().query(
+    `INSERT INTO media (id, filename, mime, bytes, data) VALUES ($1, $2, $3, $4, $5)`,
+    [mediaId, filename.slice(0, 200), mime, data.length, data],
+  );
+  return { id: mediaId, url: `/api/media/${mediaId}` };
+}
+
+export async function getMedia(
+  mediaId: string,
+): Promise<(MediaRow & { data: Buffer }) | undefined> {
+  await ensureDatabase();
+  const { rows } = await pool().query<{
+    id: string;
+    filename: string;
+    mime: string;
+    bytes: number;
+    data: Buffer;
+  }>(`SELECT id, filename, mime, bytes, data FROM media WHERE id = $1 LIMIT 1`, [mediaId]);
+  const row = rows[0];
+  if (!row) return undefined;
+  return row;
 }

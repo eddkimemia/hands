@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
+import { getProductById, getSettings } from "@/lib/content";
 import { id, insertItem } from "@/lib/db";
-import { getProductById } from "@/lib/content";
 import { cleanStr, clientIp, isSpam, tooManyRequests, validateFields } from "@/lib/forms";
 import type { ShopOrder } from "@/types";
 
@@ -41,21 +41,35 @@ export async function POST(req: Request) {
     notes: { max: 2000 },
   });
 
-  const items: ShopOrder["items"] = [];
-  const rawItems = Array.isArray(body.items) ? (body.items as CartItemInput[]) : [];
+  const rawItems: CartItemInput[] = Array.isArray(body.items) ? (body.items as CartItemInput[]) : [];
   if (!rawItems.length) errors.items = "Your cart is empty.";
 
-  for (const raw of rawItems.slice(0, 20)) {
+  const settings = await getSettings();
+
+  // Resolve every item against the database — prices are never trusted from the client.
+  const items: ShopOrder["items"] = [];
+  let totalKesItems = 0;
+  let totalUsdItems = 0;
+  let allHaveUsd = rawItems.length > 0;
+
+  for (const raw of rawItems.slice(0, 30)) {
     const product = await getProductById(String(raw.productId ?? ""));
     if (!product || !product.inStock) {
       errors.items = "One of the items in your cart is unavailable.";
       break;
     }
     const qty = Math.min(Math.max(Math.floor(Number(raw.qty) || 0), 1), 20);
+    const priceUsd = typeof product.priceUsd === "number" ? product.priceUsd : undefined;
+    if (typeof priceUsd !== "number") allHaveUsd = false;
+
+    totalKesItems += product.priceKes * qty;
+    if (typeof priceUsd === "number") totalUsdItems += priceUsd * qty;
+
     items.push({
       productId: product.id,
       name: product.name,
       priceKes: product.priceKes,
+      priceUsd,
       size: typeof raw.size === "string" ? raw.size.slice(0, 10) : undefined,
       color: typeof raw.color === "string" ? raw.color.slice(0, 30) : undefined,
       qty,
@@ -66,12 +80,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: Object.values(errors)[0], errors }, { status: 422 });
   }
 
-  const totalKes = items.reduce((sum, it) => sum + it.priceKes * it.qty, 0);
+  // Currency preference honoured only when every item carries an admin-set USD price.
+  const requestedCurrency = body.currency === "USD" ? "USD" : "KES";
+  const currency: ShopOrder["currency"] =
+    requestedCurrency === "USD" && allHaveUsd ? "USD" : "KES";
+
+  const deliveryFeeKes = Math.max(0, Math.round(Number(settings.deliveryFeeKes) || 0));
+  const deliveryFeeUsd = Math.max(0, Number(settings.deliveryFeeUsd) || 0);
 
   const order: ShopOrder = {
     id: id("ord"),
+    currency,
     items,
-    totalKes,
+    deliveryFeeKes,
+    totalKes: totalKesItems + deliveryFeeKes,
+    ...(currency === "USD"
+      ? { deliveryFeeUsd, totalUsd: totalUsdItems + deliveryFeeUsd }
+      : {}),
     customerName: cleanStr(body.customerName, 120)!,
     email: String(body.email).toLowerCase().trim(),
     phone: cleanStr(body.phone, 40),
@@ -83,11 +108,17 @@ export async function POST(req: Request) {
 
   await insertItem("orders", order.id, order);
 
+  const grandDisplay =
+    currency === "USD"
+      ? `$${(order.totalUsd ?? 0).toLocaleString()}`
+      : `KES ${order.totalKes.toLocaleString()}`;
+
   return NextResponse.json({
     ok: true,
     reference: order.id,
-    totalKes,
-    message:
-      "Order received! Our shop team will confirm availability and payment/delivery details by email.",
+    currency,
+    totalKes: order.totalKes,
+    totalUsd: order.totalUsd,
+    message: `Order received (${grandDisplay}). Our shop team will confirm availability and arrange payment & delivery by email or phone.`,
   });
 }

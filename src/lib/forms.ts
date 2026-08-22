@@ -7,12 +7,12 @@ import { isEmail } from "./utils";
 
 const hits = new Map<string, number[]>();
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_HITS_PER_WINDOW = 8;
+const DEFAULT_MAX_HITS = 25;
 
-export function tooManyRequests(ip: string): boolean {
+export function tooManyRequests(ip: string, maxHits = DEFAULT_MAX_HITS): boolean {
   const now = Date.now();
   const arr = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-  if (arr.length >= MAX_HITS_PER_WINDOW) {
+  if (arr.length >= maxHits) {
     hits.set(ip, arr);
     return true;
   }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/cart/CartContext";
+import { formatPrice, useCurrency } from "@/components/cart/CurrencyContext";
 import { Icon } from "@/components/Icon";
 import { buildWhatsAppOrderUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
@@ -12,13 +13,15 @@ export interface PurchaseProduct {
   slug: string;
   name: string;
   priceKes: number;
+  priceUsd?: number;
   image: string;
   sizes: string[];
   colors: string[];
 }
 
 export function ProductPurchase({ product }: { product: PurchaseProduct }) {
-  const { addItem } = useCart();
+  const { addItem, count } = useCart();
+  const { currency } = useCurrency();
   const [size, setSize] = useState(product.sizes[0] ?? "");
   const [color, setColor] = useState(product.colors[0] ?? "");
   const [qty, setQty] = useState(1);
@@ -30,6 +33,7 @@ export function ProductPurchase({ product }: { product: PurchaseProduct }) {
       slug: product.slug,
       name: product.name,
       priceKes: product.priceKes,
+      priceUsd: product.priceUsd,
       image: product.image,
       qty,
       size: size || undefined,
@@ -131,11 +135,11 @@ export function ProductPurchase({ product }: { product: PurchaseProduct }) {
         <div className="flex items-center justify-between rounded-2xl bg-sand px-5 py-3.5">
           <span className="text-sm font-semibold text-navy-600">Subtotal</span>
           <span className="font-display text-xl font-semibold text-navy-900">
-            KES {(product.priceKes * qty).toLocaleString()}
+            {formatPrice(product.priceKes * qty, (product.priceUsd ?? 0) * qty || undefined, currency)}
           </span>
         </div>
 
-        <button type="button" onClick={handleAdd} className={cn("btn-lg w-full", added ? "bg-leaf-600 !text-white" : "btn-primary")}>
+        <button type="button" onClick={handleAdd} className={cn("btn btn-lg w-full", added ? "bg-leaf-600 !text-white" : "btn-primary")}>
           {added ? (
             <>
               <Icon name="check" size={18} />
@@ -151,16 +155,11 @@ export function ProductPurchase({ product }: { product: PurchaseProduct }) {
 
         {added && (
           <Link href="/cart" className="link-underline mx-auto text-sm font-bold text-leaf-700">
-            Go to your cart →
+            Go to your cart{count > 1 ? ` (${count} items)` : ""} →
           </Link>
         )}
 
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-lg inline-flex w-full bg-[#25D366] !text-white shadow-card hover:-translate-y-0.5 hover:brightness-95 active:translate-y-0"
-        >
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp btn-lg w-full">
           <Icon name="whatsapp" size={19} />
           Order on WhatsApp
         </a>

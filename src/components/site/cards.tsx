@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { SmartImage } from "@/components/SmartImage";
-import { cn, formatDate, formatKes } from "@/lib/utils";
-import type { Program, Product, Project, Story } from "@/types";
+import { cn, formatDate } from "@/lib/utils";
+import type { Program, Project, Story } from "@/types";
 
 /* ------------------------------- ProgramCard ------------------------------ */
 
@@ -137,64 +137,6 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.peopleReached.toLocaleString()} people reached
           </p>
         </div>
-      </div>
-    </article>
-  );
-}
-
-/* ------------------------------- ProductCard ------------------------------ */
-
-export function ProductCard({
-  product,
-  ctaHref,
-  orderHref,
-}: {
-  product: Product;
-  ctaHref?: string;
-  orderHref?: string;
-}) {
-  return (
-    <article className="card card-hover group flex h-full flex-col overflow-hidden">
-      <div className="zoom-img relative h-60 overflow-hidden bg-sand">
-        <SmartImage
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover"
-        />
-        {!product.inStock && (
-          <span className="chip absolute right-4 top-4 bg-navy-900/90 text-white">Out of stock</span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-lg font-semibold text-navy-900">{product.name}</h3>
-          <p className="whitespace-nowrap rounded-full bg-gold-100 px-3 py-1 text-sm font-bold text-gold-800">
-            {formatKes(product.priceKes)}
-          </p>
-        </div>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-navy-800/75">{product.description}</p>
-        {orderHref ? (
-          <Link
-            href={product.inStock ? orderHref : "#"}
-            aria-disabled={!product.inStock}
-            className={cn(
-              "btn-navy btn-sm mt-4 w-full",
-              !product.inStock && "pointer-events-none opacity-50",
-            )}
-          >
-            <Icon name="shopping-bag" size={15} />
-            {product.inStock ? "Order" : "Out of stock"}
-          </Link>
-        ) : (
-          ctaHref && (
-            <Link href={ctaHref} className="btn-outline btn-sm mt-4 w-full">
-              <Icon name="shopping-bag" size={15} />
-              View in Shop
-            </Link>
-          )
-        )}
       </div>
     </article>
   );

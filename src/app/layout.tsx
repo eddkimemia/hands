@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import Script from "next/script";
 import { CartProvider } from "@/components/cart/CartContext";
+import { CurrencyProvider } from "@/components/cart/CurrencyContext";
 import { FloatingChat } from "@/components/site/FloatingChat";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -76,7 +77,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en-KE" className={`${display.variable} ${sans.variable}`}>
       <body>
-        <CartProvider>
+        <CurrencyProvider>
+          <CartProvider>
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-navy-900 focus:px-5 focus:py-2.5 focus:text-sm focus:text-white"
@@ -92,6 +94,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <FloatingChat />
           </HideOnAdmin>
         </CartProvider>
+        </CurrencyProvider>
 
         <script
           type="application/ld+json"

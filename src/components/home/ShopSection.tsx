@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { ProductCard } from "@/components/site/ProductCard";
 import { SectionHeader } from "@/components/site/Section";
-import { ProductCard } from "@/components/site/cards";
 import type { Product } from "@/types";
 
 export function ShopSection({ products }: { products: Product[] }) {

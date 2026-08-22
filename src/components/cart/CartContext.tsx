@@ -16,6 +16,7 @@ export interface CartItem {
   slug: string;
   name: string;
   priceKes: number;
+  priceUsd?: number;
   image: string;
   qty: number;
   size?: string;
@@ -26,6 +27,8 @@ interface CartContextValue {
   items: CartItem[];
   count: number;
   totalKes: number;
+  /** Only set when every item has an admin-set USD price. */
+  totalUsd?: number;
   addItem: (item: Omit<CartItem, "key">) => void;
   updateQty: (key: string, qty: number) => void;
   removeItem: (key: string) => void;
@@ -98,7 +101,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const count = items.reduce((sum, i) => sum + i.qty, 0);
     const totalKes = items.reduce((sum, i) => sum + i.priceKes * i.qty, 0);
-    return { items, count, totalKes, addItem, updateQty, removeItem, clear, hydrated };
+    const totalUsd = items.reduce(
+      (sum, i) => sum + (typeof i.priceUsd === "number" ? i.priceUsd * i.qty : 0),
+      0,
+    );
+    const allHaveUsd = items.length > 0 && items.every((i) => typeof i.priceUsd === "number" && i.priceUsd > 0);
+    return { items, count, totalKes, totalUsd: allHaveUsd ? totalUsd : undefined, addItem, updateQty, removeItem, clear, hydrated };
   }, [items, hydrated, addItem, updateQty, removeItem, clear]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

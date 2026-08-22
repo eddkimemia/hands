@@ -87,6 +87,10 @@ body {
   @apply btn bg-white text-navy-900 shadow-soft hover:-translate-y-0.5 hover:bg-gold-100 hover:shadow-lift active:translate-y-0;
 }
 
+.btn-whatsapp {
+  @apply btn bg-[#25D366] text-white shadow-card hover:-translate-y-0.5 hover:bg-[#1FBF5B] hover:shadow-lift active:translate-y-0;
+}
+
 /* ---------- Cards ---------- */
 .card {
   @apply rounded-2xl border border-navy-100 bg-white shadow-card transition-all duration-300;

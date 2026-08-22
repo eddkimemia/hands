@@ -295,6 +295,7 @@ export const RESOURCES: ResourceConfig[] = [
       { key: "name", label: "Product name", type: "text", required: true, half: true },
       { key: "slug", label: "URL slug", type: "text", half: true, help: "Leave blank to auto-generate" },
       { key: "priceKes", label: "Price (KES)", type: "number", required: true, half: true },
+      { key: "priceUsd", label: "Price (USD) — shown outside Kenya", type: "number", half: true },
       { key: "inStock", label: "In stock", type: "boolean", half: true },
       { key: "featured", label: "Featured", type: "boolean", half: true },
       { key: "description", label: "Description", type: "textarea" },
@@ -463,6 +464,14 @@ export const RESOURCES: ResourceConfig[] = [
       { key: "emailPrograms", label: "Programs email", type: "text", half: true },
       { key: "phone", label: "Phone (leave empty to hide)", type: "text", half: true },
       { key: "location", label: "Location", type: "text", half: true },
+      { key: "deliveryFeeKes", label: "Delivery fee (KES)", type: "number", half: true },
+      {
+        key: "deliveryFeeUsd",
+        label: "Delivery fee (USD)",
+        type: "number",
+        half: true,
+        help: "Shown to visitors outside Kenya",
+      },
       { key: "registrationNote", label: "Registration note", type: "textarea" },
       {
         key: "socials",
