@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { SmartImage } from "@/components/SmartImage";
 
 interface PageHeroProps {
   eyebrow?: string;
@@ -13,10 +14,25 @@ interface PageHeroProps {
 export function PageHero({ eyebrow, title, description, crumbs }: PageHeroProps) {
   return (
     <section className="relative overflow-hidden bg-navy-950">
+      {/* Team photo behind a navy gradient */}
+      <div aria-hidden="true" className="absolute inset-0">
+        <SmartImage
+          src="/team.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/80 via-navy-950/40 to-navy-950/10" />
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-navy-950/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-950/80 to-transparent" />
+      </div>
+
       {/* decorative arcs */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full border-[56px] border-navy-800/60" />
-        <div className="absolute -bottom-52 left-[-120px] h-[420px] w-[420px] rounded-full border-[44px] border-navy-800/40" />
+        <div className="absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full border-[56px] border-white/5" />
+        <div className="absolute -bottom-52 left-[-120px] h-[420px] w-[420px] rounded-full border-[44px] border-white/5" />
         <div className="absolute right-1/4 top-10 h-24 w-24 rounded-full bg-gold-400/15 blur-2xl" />
       </div>
 

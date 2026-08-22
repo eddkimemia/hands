@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
+import { PageHero } from "@/components/site/PageHero";
 import { ProductPurchase } from "@/components/site/ProductPurchase";
 import { SmartImage } from "@/components/SmartImage";
 import { getProductById, getProducts } from "@/lib/content";
-import { formatKes, SITE_URL } from "@/lib/utils";
+import { formatKes, SITE_URL, truncate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -44,18 +45,19 @@ export default async function ProductOrderPage({
   const others = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 
   return (
-    <section className="section-pad bg-sand">
-      <div className="container-x">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-navy-500">
-          <ol className="flex items-center gap-1.5">
-            <li><Link href="/" className="hover:text-gold-700">Home</Link></li>
-            <li aria-hidden="true"><Icon name="arrow-right" size={11} className="text-navy-300" /></li>
-            <li><Link href="/shop" className="hover:text-gold-700">Shop</Link></li>
-            <li aria-hidden="true"><Icon name="arrow-right" size={11} className="text-navy-300" /></li>
-            <li aria-current="page" className="font-semibold text-navy-800">{product.name}</li>
-          </ol>
-        </nav>
+    <>
+      <PageHero
+        crumbs={[
+          { href: "/shop", label: "Shop" },
+          { href: `/shop/${product.slug}`, label: product.name },
+        ]}
+        eyebrow="Hope Shop"
+        title={product.name}
+        description={truncate(product.description, 150)}
+      />
 
+      <section className="section-pad bg-sand">
+        <div className="container-x">
         <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* Product visual */}
           <div>
@@ -166,7 +168,8 @@ export default async function ProductOrderPage({
             </div>
           </div>
         )}
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
