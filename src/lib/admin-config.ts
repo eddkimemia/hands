@@ -459,6 +459,13 @@ export const RESOURCES: ResourceConfig[] = [
       { key: "totalKes", label: "Total (KES)", type: "number" },
       { key: "notes", label: "Notes", type: "textarea" },
       {
+        key: "paidAt",
+        label: "Paid at",
+        type: "text",
+        half: true,
+        help: "Filled automatically by Mark as Paid on the order page",
+      },
+      {
         key: "status",
         label: "Status",
         type: "select",
@@ -497,6 +504,7 @@ export const RESOURCES: ResourceConfig[] = [
         key: "whatsappGroupUrl",
         label: "WhatsApp community invite link",
         type: "text",
+        placeholder: "https://chat.whatsapp.com/…",
         help: "Paste the group invite URL to show the “Join our WhatsApp” bar sitewide. Leave empty to hide it.",
       },
       { key: "registrationNote", label: "Registration note", type: "textarea" },

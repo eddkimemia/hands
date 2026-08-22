@@ -16,6 +16,10 @@ export function coerceItem(
   for (const field of fields) {
     const raw = input[field.key];
 
+    // Partial updates: when a key is absent from the payload entirely,
+    // preserve the stored value instead of wiping it.
+    if (!(field.key in input)) continue;
+
     switch (field.type) {
       case "number": {
         const n = Number(raw);

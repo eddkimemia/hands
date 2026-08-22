@@ -54,6 +54,22 @@ export async function PUT(req: Request, ctx: Ctx) {
     resource as "settings" | "homepage",
   );
   const next = coerceItem(config.fields, body, current);
+
+  // Guard: WhatsApp community link must actually point at WhatsApp —
+  // this catches social-page links accidentally pasted into the field.
+  if (resource === "settings") {
+    const w = String(next.whatsappGroupUrl ?? "").trim();
+    if (w && !/^https:\/\/(chat\.whatsapp\.com|wa\.me|api\.whatsapp\.com)/i.test(w)) {
+      return NextResponse.json(
+        {
+          error:
+            "WhatsApp link looks wrong — it should start with https://chat.whatsapp.com or https://wa.me (social page links belong in the socials list below).",
+        },
+        { status: 422 },
+      );
+    }
+  }
+
   await putSingleton(resource as "settings" | "homepage", next);
   return NextResponse.json({ ok: true, item: next });
 }

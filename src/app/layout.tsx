@@ -86,9 +86,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           >
             Skip to content
           </a>
-          <HideOnAdmin>
-            <Header />
-          </HideOnAdmin>
+        <HideOnAdmin>
+          {settings.whatsappGroupUrl ? <TopBar url={settings.whatsappGroupUrl} /> : null}
+          <Header />
+        </HideOnAdmin>
           <main id="main-content">{children}</main>
           <HideOnAdmin>
             <Footer />

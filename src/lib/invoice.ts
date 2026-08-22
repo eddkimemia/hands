@@ -6,7 +6,7 @@ import type { ShopOrder, SiteSettings } from "@/types";
 
 /* ------------------------------------------------------------------ */
 /*  Ishara Charity — pro-forma invoice / receipt PDF                   */
-/*  Single A4 page · waves on top · authorised stamp with date         */
+/*  Single A4 page · waves on top · structured table · status pill     */
 /* ------------------------------------------------------------------ */
 
 const NAVY = "#0B2145";
@@ -15,7 +15,7 @@ const GOLD = "#E8A33D";
 const INK = "#23324A";
 const MUTED = "#5F6E85";
 const LINE = "#DFE6F0";
-const ZEBRA = "#F6F8FB";
+const CARD = "#F6F8FB";
 
 function money(n: number, currency: "KES" | "USD"): string {
   return currency === "USD"
@@ -32,15 +32,18 @@ export async function generateInvoicePdf(
   const grand = currency === "USD" ? order.totalUsd ?? order.totalKes : order.totalKes;
   const subtotal = grand - fee;
   const paid = Boolean(order.paidAt) || order.status === "fulfilled";
+  const ref = order.orderNumber ?? order.id;
 
   return new Promise<Buffer>((resolve, reject) => {
     const doc = new PDFDocument({
       size: "A4",
-      margins: { top: 0, bottom: 0, left: 48, right: 48 },
+      margins: { top: 0, bottom: 0, left: 44, right: 44 },
+      autoFirstPage: true,
+      compress: false, // keeps output verifiable; vector/text stays small anyway
       info: {
-        Title: `${order.orderNumber ?? order.id} — ${settings.orgName}`,
+        Title: `${ref} — ${settings.orgName}`,
         Author: settings.orgName,
-        Subject: `Merchandise order ${order.orderNumber ?? order.id}`,
+        Subject: `Merchandise order ${ref}`,
       },
     });
 
@@ -49,63 +52,102 @@ export async function generateInvoicePdf(
     doc.on("error", reject);
     doc.on("end", () => resolve(Buffer.concat(chunks)));
 
-    const W = doc.page.width;
-    const M = 48;
+    const W = doc.page.width; // 595.28
+    const H = doc.page.height; // 841.89
+    const M = 44;
     const CW = W - M * 2;
     let y = 0;
 
-    /* ---------------------- waves on top (navy+gold) --------------------- */
+    /* --------------------------- waves on top --------------------------- */
     doc.save();
     doc.moveTo(0, 0);
     doc.lineTo(W, 0);
-    doc.lineTo(W, 30);
-    doc.bezierCurveTo(W * 0.72, 50, W * 0.45, 26, W * 0.24, 40);
-    doc.bezierCurveTo(W * 0.12, 46, W * 0.05, 43, 0, 35);
+    doc.lineTo(W, 26);
+    doc.bezierCurveTo(W * 0.72, 46, W * 0.45, 22, W * 0.24, 36);
+    doc.bezierCurveTo(W * 0.12, 42, W * 0.05, 39, 0, 31);
     doc.closePath();
     doc.fillOpacity(1);
     doc.fill(NAVY);
 
-    doc.moveTo(0, 33);
-    doc.bezierCurveTo(W * 0.14, 45, W * 0.3, 39, W * 0.5, 47);
-    doc.bezierCurveTo(W * 0.68, 54, W * 0.85, 43, W, 49);
-    doc.lineTo(W, 60);
-    doc.bezierCurveTo(W * 0.8, 55, W * 0.6, 64, W * 0.4, 57);
-    doc.bezierCurveTo(W * 0.22, 51, W * 0.1, 55, 0, 47);
+    doc.moveTo(0, 29);
+    doc.bezierCurveTo(W * 0.14, 41, W * 0.3, 35, W * 0.5, 43);
+    doc.bezierCurveTo(W * 0.68, 50, W * 0.85, 39, W, 45);
+    doc.lineTo(W, 54);
+    doc.bezierCurveTo(W * 0.8, 49, W * 0.6, 58, W * 0.4, 51);
+    doc.bezierCurveTo(W * 0.22, 45, W * 0.1, 49, 0, 43);
     doc.closePath();
     doc.fillOpacity(1);
     doc.fill(GOLD);
     doc.restore();
 
-    /* --------------------------- identity row ---------------------------- */
-    y = 84;
+    /* ------------------------- identity row ----------------------------- */
+    y = 76;
+    const logoBottom = y + 54; // logo occupies this band — nothing may enter it
     const logoPath = path.join(process.cwd(), "public", "logo", "hopelogo.png");
     if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, M, y - 8, { height: 52 });
+      doc.image(logoPath, M, y - 6, { height: 52 });
     }
 
     doc
       .fill(NAVY)
       .font("Helvetica-Bold")
-      .fontSize(18)
-      .text("INVOICE", M, y - 2, { align: "right", width: CW });
-    doc
-      .fill("#5F6E85")
-      .font("Helvetica")
-      .fontSize(9)
-      .text(`Ref: ${order.orderNumber ?? order.id}`, M, y + 24, { align: "right", width: CW })
-      .text(`Issued: ${new Date(order.createdAt).toLocaleDateString("en-KE")}`, {
-        align: "right",
-        width: CW,
-      });
+      .fontSize(17)
+      .text("INVOICE", M, y, { align: "right", width: CW });
 
-    // Payment status — small coloured line, never overlapping the ref text
+    // Clear padding below the logo before any following section
+    y = logoBottom + 26;
+
+    /* --------------------- metadata information card -------------------- */
+    const metaH = 66;
+    doc.roundedRect(M, y, CW, metaH, 8).fill(CARD);
+    doc.roundedRect(M, y, CW, metaH, 8).lineWidth(1).stroke(LINE);
+
+    // left half — reference + issued
+    const lx = M + 18;
+    doc.fill(MUTED).font("Helvetica-Bold").fontSize(7).text("INVOICE REF", lx, y + 12, { characterSpacing: 1 });
+    doc.fill(NAVY).font("Helvetica-Bold").fontSize(11).text(ref, lx, y + 23);
+    doc.fill(MUTED).font("Helvetica").fontSize(9).text(`Issued ${new Date(order.createdAt).toLocaleDateString("en-KE")}`, lx, y + 42);
+
+    // middle — customer
+    doc.fill(MUTED).font("Helvetica-Bold").fontSize(7).text("PREPARED FOR", M + CW * 0.38, y + 12, { characterSpacing: 1 });
+    doc.fill(INK).font("Helvetica-Bold").fontSize(10).text(order.customerName, M + CW * 0.38, y + 23);
+    doc.fill(MUTED).font("Helvetica").fontSize(9).text(order.email, M + CW * 0.38, y + 42);
+
+    // right half — status pill (isolated, padded)
+    const pillW = 118;
+    const pillH = 24;
+    const pillX = W - M - pillW - 16;
+    const pillY = y + 21;
+    const statusColor = paid ? "#1E9E5A" : "#D64545";
+    doc.roundedRect(pillX, pillY, pillW, pillH, pillH / 2).lineWidth(1.2).stroke(statusColor);
+    doc.roundedRect(pillX, pillY, pillW, pillH, pillH / 2).fillOpacity(0.12).fill(statusColor);
+    doc.fillOpacity(1);
     doc
+      .fill(statusColor)
       .font("Helvetica-Bold")
-      .fontSize(9)
-      .fill(paid ? "#1E9E5A" : "#D64545")
-      .text(paid ? "STATUS: PAID ✓" : "STATUS: PAYMENT DUE", M, y + 44, { align: "right", width: CW });
+      .fontSize(8.5)
+      .text(paid ? "PAID" : "PAYMENT DUE", pillX, pillY + pillH / 2 - 5, {
+        width: pillW,
+        align: "center",
+        characterSpacing: 0.5,
+      });
+    if (paid) {
+      doc
+        .fill(MUTED)
+        .font("Helvetica")
+        .fontSize(8)
+        .text(order.paidAt ? new Date(order.paidAt).toLocaleDateString("en-KE") : "", pillX, pillY + pillH + 2, {
+          width: pillW,
+          align: "center",
+        });
+    } else {
+      doc.fill(MUTED).font("Helvetica").fontSize(8).text("Due on confirmation", pillX, pillY + pillH + 2, {
+        width: pillW,
+        align: "center",
+      });
+    }
 
-    y += 92;
+    y += metaH + 26;
 
     /* ------------------------------ parties ------------------------------ */
     const colW = (CW - 24) / 2;
@@ -123,134 +165,135 @@ export async function generateInvoicePdf(
       .text(order.phone ?? "", M, y + 42);
 
     const rx = M + colW + 24;
+    const townLine = order.deliveryAddress.split(",").slice(-1)[0]?.trim() || "";
     doc.fill(MUTED).font("Helvetica-Bold").fontSize(7.5).text("DELIVER TO", rx, y, { characterSpacing: 1 });
-    doc.fill(INK).font("Helvetica-Bold").fontSize(10.5).text(order.deliveryAddress.split(",")[0]?.trim() || order.deliveryAddress, rx, y + 13, { width: colW });
-    doc.fill("#3D4C63").font("Helvetica").fontSize(9).text(order.deliveryAddress, rx, y + 28, { width: colW });
+    doc
+      .fill(INK)
+      .font("Helvetica-Bold")
+      .fontSize(10.5)
+      .text(order.deliveryAddress.split(",")[0]?.trim() || order.deliveryAddress, rx, y + 13, { width: colW })
+      .font("Helvetica")
+      .fontSize(9)
+      .fill("#3D4C63");
+    if (townLine && townLine !== order.deliveryAddress.split(",")[0]?.trim()) {
+      doc.text(townLine, rx, y + 28, { width: colW });
+    }
 
-    y += 74;
+    y += 64;
     doc.moveTo(M, y).lineTo(W - M, y).lineWidth(1).strokeColor(LINE).stroke();
-    y += 16;
+    y += 14;
 
     /* ------------------------------- items ------------------------------- */
-    const cols = {
-      idx: M,
-      item: M + 26,
-      variant: M + 252,
-      qty: M + 358,
-      unit: M + 404,
-      amount: W - M,
+    // Column geometry — fixed positions, generous gaps, nothing can push anything.
+    const c = {
+      itemX: M, // 44
+      itemW: 196, // ends 240
+      optX: M + 206, // 250
+      optW: 96, // ends 346
+      qtyX: M + 310, // 354
+      qtyW: 42, // centred, ends 396
+      unitRight: M + 416, // right edge 460
+      unitW: 62, // starts 398
+      amountRight: W - M, // right edge 551.28
+      amountW: 74, // starts 477.28 — clear 17pt gap from unit column
     };
 
-    doc.rect(M, y, CW, 22).fill(NAVY);
+    doc.rect(M, y, CW, 24).fill(NAVY);
     doc.fill("#FFFFFF").font("Helvetica-Bold").fontSize(8);
-    doc.text("#", cols.idx + 8, y + 7);
-    doc.text("ITEM", cols.item, y + 7);
-    doc.text("OPTIONS", cols.variant, y + 7);
-    doc.text("QTY", cols.qty, y + 7, { width: 38, align: "right" });
-    doc.text("UNIT", cols.unit, y + 7, { width: 72, align: "right" });
-    doc.text("AMOUNT", cols.amount - 82, y + 7, { width: 82, align: "right" });
-    y += 22;
-
-    const many = order.items.length > 6;
-    const rowFont = many ? 8 : 9;
-    const rowH = many ? 17 : Math.max(20, 12);
+    doc.text("ITEM", c.itemX, y + 8);
+    doc.text("OPTIONS", c.optX, y + 8);
+    doc.text("QTY", c.qtyX, y + 8, { width: c.qtyW, align: "center" });
+    doc.text("UNIT PRICE", c.unitRight - c.unitW, y + 8, { width: c.unitW, align: "right" });
+    doc.text("AMOUNT", c.amountRight - c.amountW, y + 8, { width: c.amountW, align: "right" });
+    y += 24;
 
     order.items.forEach((item, i) => {
       const unit = currency === "USD" ? item.priceUsd ?? item.priceKes : item.priceKes;
       const lineTotal = unit * item.qty;
-      const variant = [item.size, item.color].filter(Boolean).join(" · ");
-      const h = rowH;
+      const variant = [item.size, item.color].filter(Boolean).join(", ");
 
-      if (i % 2 === 1) doc.rect(M, y, CW, h).fill(ZEBRA);
+      // Natural wrapping — row grows to fit the longest cell.
+      const nameH = doc.heightOfString(item.name, { width: c.itemW });
+      const optH = variant ? doc.heightOfString(variant, { width: c.optW }) : 0;
+      const pad = 12;
+      const rowH = Math.max(20, nameH + pad, optH + pad);
 
-      doc.fill(INK).font("Helvetica").fontSize(rowFont);
-      doc.text(String(i + 1), cols.idx + 8, y + (h - rowFont) / 2 - 1);
-      doc.text(item.name, cols.item, y + (h - rowFont) / 2 - 1, {
-        width: cols.variant - cols.item - 10,
-        ellipsis: true,
+      if (i % 2 === 1) doc.rect(M, y, CW, rowH).fill(CARD);
+
+      const textY = y + (rowH - Math.max(nameH, 9)) / 2 - 1;
+
+      doc.fill(INK).font("Helvetica").fontSize(rowFont(nameH));
+      doc.text(item.name, c.itemX, textY, { width: c.itemW });
+      doc.fill(MUTED).text(variant || "—", c.optX, y + (rowH - Math.max(optH, 9)) / 2 - 1, { width: c.optW });
+      doc.fill(INK).text(String(item.qty), c.qtyX, y + rowH / 2 - 5, { width: c.qtyW, align: "center" });
+      doc.text(money(unit, currency), c.unitRight - c.unitW, y + rowH / 2 - 5, { width: c.unitW, align: "right" });
+      doc.font("Helvetica-Bold").text(money(lineTotal, currency), c.amountRight - c.amountW, y + rowH / 2 - 5, {
+        width: c.amountW,
+        align: "right",
       });
-      if (variant)
-        doc.fill(MUTED).text(variant, cols.variant, y + (h - rowFont) / 2 - 1, {
-          width: cols.qty - cols.variant - 10,
-          ellipsis: true,
-        });
-      doc
-        .fill(INK)
-        .text(String(item.qty), cols.qty, y + (h - rowFont) / 2 - 1, { width: 38, align: "right" })
-        .text(money(unit, currency), cols.unit, y + (h - rowFont) / 2 - 1, { width: 72, align: "right" })
-        .font("Helvetica-Bold")
-        .text(money(lineTotal, currency), cols.amount - 82, y + (h - rowFont) / 2 - 1, {
-          width: 82,
-          align: "right",
-        });
 
       doc
-        .moveTo(M, y + h)
-        .lineTo(W - M, y + h)
+        .moveTo(M, y + rowH)
+        .lineTo(W - M, y + rowH)
         .lineWidth(0.6)
         .strokeColor(LINE)
         .stroke();
 
-      y += h;
+      y += rowH;
     });
 
-    /* ------------------------- totals + stamp ---------------------------- */
-    y += 14;
-    const tx = W - M - 236;
+    function rowFont(h: number) {
+      return h > 20 ? 8.5 : 9;
+    }
 
-    const label = (t: string, ty: number) =>
-      doc.fill(MUTED).font("Helvetica").fontSize(9).text(t, tx, ty, { width: 130 });
-    const value = (v: string, ty: number) =>
-      doc.fill(INK).font("Helvetica-Bold").fontSize(9).text(v, tx + 132, ty, { width: 104, align: "right" });
+    /* ---------------------------- totals block ---------------------------- */
+    y += 16;
+    const labelX = W - M - 250;
+    const valueRight = W - M;
+    const valueX = valueRight - 110;
 
-    label(`Subtotal (${currency})`, y); value(money(subtotal, currency), y); y += 15;
-    label("Delivery fee", y); value(money(fee, currency), y); y += 19;
+    doc.moveTo(labelX - 12, y).lineTo(valueRight, y).lineWidth(1).strokeColor(LINE).stroke();
+    y += 12;
 
-    doc.roundedRect(tx - 12, y, 248, 30, 6).fill(NAVY);
+    const totalLine = (label: string, val: string, opts?: { bold?: boolean }) => {
+      doc
+        .fill(opts?.bold ? NAVY : MUTED)
+        .font(opts?.bold ? "Helvetica-Bold" : "Helvetica")
+        .fontSize(opts?.bold ? 10 : 9)
+        .text(label, labelX, y, { width: 150, align: "left" });
+      doc
+        .fill(opts?.bold ? NAVY : INK)
+        .font("Helvetica-Bold")
+        .fontSize(9.5)
+        .text(val, valueX, y - 1, { width: 110, align: "right" });
+      y += 17;
+    };
+
+    totalLine(`Subtotal (${currency})`, money(subtotal, currency));
+    totalLine("Delivery fee", money(fee, currency));
+
+    y += 4;
+    doc.roundedRect(labelX - 12, y, valueRight - labelX + 12, 32, 6).fill(NAVY);
+    doc
+      .fill(GOLD)
+      .font("Helvetica-Bold")
+      .fontSize(8)
+      .text("TOTAL", labelX, y + 11);
     doc
       .fill("#FFFFFF")
       .font("Helvetica-Bold")
-      .fontSize(10.5)
-      .text("TOTAL", tx, y + 9, { width: 126 })
-      .fontSize(11.5)
-      .text(money(grand, currency), tx + 132, y + 8, { width: 104, align: "right" });
-    y += 42;
+      .fontSize(12)
+      .text(money(grand, currency), valueX, y + 8, { width: 110, align: "right" });
+    y += 44;
 
-    // Secondary recorded total (both currencies are stored, never converted)
+    // Secondary recorded totals (both stored — never converted)
     if (order.currency === "USD" && order.totalKes) {
-      label("Recorded total (KES)", y);
-      value(`KES ${order.totalKes.toLocaleString()}`, y);
-    } else if (currency !== "USD" && order.totalUsd) {
-      label("Listed price (USD)", y);
-      value(`$${order.totalUsd.toLocaleString()}`, y);
+      totalLine("Recorded total (KES)", `KES ${order.totalKes.toLocaleString()}`);
+    } else if (order.totalUsd) {
+      totalLine("Listed price (USD)", `$${order.totalUsd.toLocaleString()}`);
     }
 
-    /* ------------------------ authorised stamp --------------------------- */
-    const stampPath = path.join(process.cwd(), "public", "stamp.png");
-    if (fs.existsSync(stampPath)) {
-      const sw = 150;
-      const sh = sw * (425 / 586); // ≈ 108.8
-      const sx = W - M - sw - 6;
-      const sy = y - sh + 34;
-
-      doc.save();
-      doc.rotate(-12, { origin: [sx + sw / 2, sy + sh / 2] });
-      doc.fillOpacity(paid ? 1 : 0.88);
-      doc.image(stampPath, sx, sy, { width: sw, height: sh });
-
-      // Date centred in the stamp's empty middle band
-      const dateStr = new Date(order.createdAt)
-        .toLocaleDateString("en-KE", { day: "2-digit", month: "short", year: "numeric" })
-        .toUpperCase();
-      doc
-        .fill(NAVY)
-        .font("Helvetica-Bold")
-        .fontSize(9.5)
-        .text(dateStr, sx, sy + sh * 0.42, { width: sw, align: "center" });
-      doc.restore();
-    }
-
-    /* ------------------------------- note -------------------------------- */
+    /* ------------------------------- note --------------------------------- */
     doc
       .fill(MUTED)
       .font("Helvetica-Oblique")
@@ -258,22 +301,46 @@ export async function generateInvoicePdf(
       .text(
         paid
           ? "Payment verified with thanks. This document serves as an official receipt."
-          : "This document is a pro-forma receipt — payment is arranged personally by our shop team and confirmed once verified.",
+          : "Pro-forma receipt — payment is arranged personally by our shop team and confirmed once verified.",
         M,
-        y - 6,
-        { width: CW - 180 },
+        y + 2,
+        { width: CW },
       );
 
+    /* ------------------- authorised stamp above footer --------------------- */
+    const stampPath = path.join(process.cwd(), "public", "stamp.png");
+    if (fs.existsSync(stampPath)) {
+      const sw = 148;
+      const sh = sw * (425 / 586);
+      const sy = H - 64 - sh - 16; // sits just above the footer band
+      const sx = W - M - sw - 24;
+
+      doc.save();
+      doc.rotate(-11, { origin: [sx + sw / 2, sy + sh / 2] });
+      doc.fillOpacity(paid ? 1 : 0.88);
+      doc.image(stampPath, sx, sy, { width: sw, height: sh });
+
+      const dateStr = new Date(order.createdAt)
+        .toLocaleDateString("en-KE", { day: "2-digit", month: "short", year: "numeric" })
+        .toUpperCase();
+      doc
+        .fill(NAVY)
+        .font("Helvetica-Bold")
+        .fontSize(9)
+        .text(dateStr, sx, sy + sh * 0.42, { width: sw, align: "center" });
+      doc.restore();
+    }
+
     /* -------------------- footer: dark navy, white text ------------------- */
-    const fy = doc.page.height - 66;
-    doc.rect(0, fy, W, doc.page.height - fy).fill(NAVY);
+    const fy = H - 62;
+    doc.rect(0, fy, W, H - fy).fill(NAVY);
     doc.rect(0, fy - 3, W, 3).fill(GOLD);
 
     doc
       .fill("#FFFFFF")
       .font("Helvetica-Bold")
       .fontSize(10.5)
-      .text("Thank you for supporting hope.", M, fy + 12);
+      .text("Thank you for supporting hope.", M, fy + 11);
     doc
       .fill("#C9D6EA")
       .font("Helvetica")
@@ -283,14 +350,14 @@ export async function generateInvoicePdf(
           (settings.emailGeneral ? ` \u00b7 ${settings.emailGeneral}` : "") +
           (settings.phone ? ` \u00b7 ${settings.phone}` : ""),
         M,
-        fy + 29,
+        fy + 28,
       )
       .fill("#8CA0BC")
       .fontSize(7)
-      .text(
-        `${order.orderNumber ?? order.id} \u00b7 generated ${new Date().toLocaleString("en-KE")}`,
-        { align: "right", width: CW },
-      );
+      .text(`${ref} \u00b7 generated ${new Date().toLocaleString("en-KE")}`, {
+        align: "right",
+        width: CW,
+      });
 
     doc.end();
   });

@@ -25,6 +25,16 @@ export function SingletonForm({ config, item }: { config: ResourceConfig; item: 
     e.preventDefault();
     setSaving(true);
     setError("");
+    if (config.key === "settings") {
+      const w = String(values.whatsappGroupUrl ?? "").trim();
+      if (w && !/^https:\/\/(chat\.whatsapp\.com|wa\.me|api\.whatsapp\.com)/i.test(w)) {
+        setError(
+          "WhatsApp link must start with https://chat.whatsapp.com or https://wa.me — social page links belong in the socials list below.",
+        );
+        setSaving(false);
+        return;
+      }
+    }
     try {
       const res = await fetch(`/api/admin/${config.key}`, {
         method: "PUT",
