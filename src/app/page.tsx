@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Ishara Charity — Extending Hands. Inspiring Hope.",
       description: homepage.heroSubtitle,
       url: SITE_URL,
-      images: [{ url: homepage.heroImage, width: 1600, height: 900, alt: "Ishara Charity community" }],
+      images: [{ url: "/team.jpg", width: 1536, height: 1024, alt: "The Ishara Charity team in the field" }],
     },
   };
 }

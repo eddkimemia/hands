@@ -47,8 +47,16 @@ export const metadata: Metadata = {
     locale: "en_KE",
     siteName: "Ishara Charity",
     url: SITE_URL,
+    images: [
+      {
+        url: "/team.jpg",
+        width: 1536,
+        height: 1024,
+        alt: "The Ishara Charity team in the field",
+      },
+    ],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/team.jpg"] },
   robots: { index: true, follow: true },
 };
 
