@@ -25,12 +25,17 @@ declare global {
 
 function pool(): Pool {
   if (!global.__hhPool) {
+    // Serverless platforms (Vercel) spin up many instances — each must keep
+    // very few connections, release them as soon as idle, and never hold the
+    // pool open. For managed Postgres also prefer the provider's POOLED
+    // connection string (e.g. Supabase :6543, Neon "-pooler" host).
+    const serverless = Boolean(process.env.VERCEL);
     global.__hhPool = new Pool({
       connectionString: CONNECTION_STRING,
-      max: 10,
-      idleTimeoutMillis: 30_000,
+      max: Number(process.env.PG_POOL_MAX || (serverless ? 3 : 10)),
+      idleTimeoutMillis: serverless ? 8_000 : 30_000,
       connectionTimeoutMillis: 20_000,
-      // Retry once on transient connection drops (e.g. local PG waking up).
+      allowExitOnIdle: true,
       application_name: "isharacharity",
     });
     global.__hhPool.on("error", (err) => console.error("[db] pool error", err.message));
@@ -52,47 +57,60 @@ export type CollectionKey = Exclude<keyof DatabaseShape, never>;
 
 let readyPromise: Promise<void> | null = null;
 
-/** Creates the schema and seeds starter content on first run. */
-export async function ensureDatabase(): Promise<void> {
-  if (!readyPromise) {
-    readyPromise = (async () => {
-      const client = pool();
-      await client.query(`
-        CREATE TABLE IF NOT EXISTS content (
-          collection TEXT NOT NULL,
-          id TEXT NOT NULL,
-          data JSONB NOT NULL,
-          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-          PRIMARY KEY (collection, id)
-        )
-      `);
-      await client.query(
-        `CREATE INDEX IF NOT EXISTS content_collection_idx ON content (collection)`,
-      );
-      await client.query(`
-        CREATE TABLE IF NOT EXISTS media (
-          id TEXT PRIMARY KEY,
-          filename TEXT NOT NULL,
-          mime TEXT NOT NULL,
-          bytes INTEGER NOT NULL,
-          data BYTEA NOT NULL,
-          created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-        )
-      `);
+async function runEnsure(): Promise<void> {
+  const client = pool();
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS content (
+      collection TEXT NOT NULL,
+      id TEXT NOT NULL,
+      data JSONB NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (collection, id)
+    )
+  `);
+  await client.query(
+    `CREATE INDEX IF NOT EXISTS content_collection_idx ON content (collection)`,
+  );
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS media (
+      id TEXT PRIMARY KEY,
+      filename TEXT NOT NULL,
+      mime TEXT NOT NULL,
+      bytes INTEGER NOT NULL,
+      data BYTEA NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
 
-      const { rows } = await client.query<{ count: string }>(
-        `SELECT count(*)::text AS count FROM content`,
-      );
-      if (Number(rows[0]?.count ?? "0") === 0) {
-        await seedDatabase();
-        console.log("[db] Seeded starter content into PostgreSQL");
-      }
-    })().catch((err) => {
-      readyPromise = null; // allow retry on next request
+  const { rows } = await client.query<{ count: string }>(
+    `SELECT count(*)::text AS count FROM content`,
+  );
+  if (Number(rows[0]?.count ?? "0") === 0) {
+    await seedDatabase();
+    console.log("[db] Seeded starter content into PostgreSQL");
+  }
+}
+
+/**
+ * Creates the schema and seeds starter content on first run.
+ * Retries transient connection errors (serverless cold starts, pool churn).
+ */
+export async function ensureDatabase(attempt = 0): Promise<void> {
+  if (!readyPromise) {
+    readyPromise = runEnsure().catch((err) => {
+      readyPromise = null; // allow a fresh attempt on the next request
       throw err;
     });
   }
-  return readyPromise;
+  try {
+    await readyPromise;
+  } catch (err) {
+    if (attempt < 2) {
+      await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+      return ensureDatabase(attempt + 1);
+    }
+    throw err;
+  }
 }
 
 async function seedDatabase(): Promise<void> {
