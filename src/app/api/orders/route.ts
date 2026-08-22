@@ -34,11 +34,13 @@ export async function POST(req: Request) {
   }
 
   const errors = validateFields(body, {
-    customerName: { required: true, max: 120 },
-    email: { required: true, email: true, max: 200 },
-    phone: { max: 40 },
-    deliveryAddress: { required: true, min: 6, max: 500 },
-    notes: { max: 2000 },
+    customerName: { required: true, max: 120, label: "Your name" },
+    email: { required: true, email: true, max: 200, label: "Email" },
+    phone: { max: 40, label: "Phone" },
+    town: { required: true, min: 2, max: 120, label: "Town / City" },
+    estate: { required: true, min: 2, max: 200, label: "Estate / Neighbourhood" },
+    street: { max: 200, label: "Street / Building" },
+    notes: { max: 2000, label: "Notes" },
   });
 
   const rawItems: CartItemInput[] = Array.isArray(body.items) ? (body.items as CartItemInput[]) : [];
@@ -88,6 +90,12 @@ export async function POST(req: Request) {
   const deliveryFeeKes = Math.max(0, Math.round(Number(settings.deliveryFeeKes) || 0));
   const deliveryFeeUsd = Math.max(0, Number(settings.deliveryFeeUsd) || 0);
 
+  // Compose the delivery address from its structured parts.
+  const street = cleanStr(body.street, 200);
+  const estate = cleanStr(body.estate, 200)!;
+  const town = cleanStr(body.town, 120)!;
+  const deliveryAddress = [street, estate, town].filter(Boolean).join(", ").slice(0, 500);
+
   const order: ShopOrder = {
     id: id("ord"),
     currency,
@@ -100,7 +108,7 @@ export async function POST(req: Request) {
     customerName: cleanStr(body.customerName, 120)!,
     email: String(body.email).toLowerCase().trim(),
     phone: cleanStr(body.phone, 40),
-    deliveryAddress: cleanStr(body.deliveryAddress, 500)!,
+    deliveryAddress,
     notes: cleanStr(body.notes, 2000),
     createdAt: new Date().toISOString(),
     status: "new",

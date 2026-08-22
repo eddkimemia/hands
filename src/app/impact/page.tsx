@@ -72,6 +72,69 @@ export default async function ImpactPage() {
         </div>
       </section>
 
+      {/* Methodology */}
+      <section className="section-pad">
+        <div className="container-x grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <SectionHeader
+              eyebrow="Our Method"
+              title="How We Count — and Why You Can Trust It"
+              description="Numbers without method are just marketing. Here is exactly how impact figures on this site are produced."
+              align="left"
+              className="!max-w-none"
+            />
+            <Reveal delay={140}>
+              <p className="mt-6 text-sm leading-relaxed text-navy-700">
+                Every statistic published here traces back to primary records: attendance sheets
+                signed at outreach camps, school retention confirmations from head teachers,
+                distribution registers co-signed by local leaders, and committee reports from
+                community projects. Program teams consolidate these monthly; our coordination desk
+                reviews them before anything is published.
+              </p>
+            </Reveal>
+            <Reveal delay={200}>
+              <p className="mt-4 text-sm leading-relaxed text-navy-700">
+                When a figure cannot yet be verified to this standard, we simply don&apos;t publish it.
+                That is why some sections of this site grow slowly — and why partners, auditors and
+                supporters can rely on the numbers that do appear.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={120}>
+            <ul className="space-y-3.5">
+              {[
+                {
+                  title: "Verification before publication",
+                  body: "Two-source confirmation — field records plus partner or leader sign-off.",
+                },
+                {
+                  title: "Consent-based storytelling",
+                  body: "Stories and photos are shared only with informed, documented consent.",
+                },
+                {
+                  title: "Honest revisions",
+                  body: "If a number proves wrong on verification, we correct it publicly.",
+                },
+                {
+                  title: "Independent oversight",
+                  body: "Board review of all reported figures each reporting cycle.",
+                },
+              ].map((item) => (
+                <li key={item.title} className="card flex gap-4 p-5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-leaf-50 text-leaf-700">
+                    <Icon name="check-circle" size={19} />
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-navy-900">{item.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-navy-600">{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Projects */}
       <section className="section-pad bg-sand">
         <div className="container-x">

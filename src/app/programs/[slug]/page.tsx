@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
+import { Faq, type FaqItem } from "@/components/site/Faq";
+import { faqJsonLd } from "@/lib/faq-schema";
 import { Reveal } from "@/components/Reveal";
 import { PageHero } from "@/components/site/PageHero";
 import { ProjectCard } from "@/components/site/cards";
@@ -20,7 +22,7 @@ export async function generateMetadata({
   const program = await getProgramBySlug(slug);
   if (!program) return { title: "Program Not Found" };
   return {
-    title: program.name,
+    title: `${program.name} Program`,
     description: program.summary,
     alternates: { canonical: `${SITE_URL}/programs/${program.slug}` },
     openGraph: {
@@ -44,15 +46,18 @@ export default async function ProgramDetailPage({
   const settings = await getSettings();
   const relatedProjects = (await getProjects()).filter((p) => p.programId === program.id);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: program.name,
-    description: program.summary,
-    provider: { "@type": "NGO", name: settings.orgName },
-    areaServed: { "@type": "Country", name: "Kenya" },
-    url: `${SITE_URL}/programs/${program.slug}`,
-  };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: program.name,
+      description: program.summary,
+      provider: { "@type": "NGO", name: settings.orgName },
+      areaServed: { "@type": "Country", name: "Kenya" },
+      url: `${SITE_URL}/programs/${program.slug}`,
+    },
+    ...(program.faq?.length ? [faqJsonLd(program.faq as FaqItem[])] : []),
+  ];
 
   return (
     <>
@@ -72,16 +77,52 @@ export default async function ProgramDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Objectives + activities */}
+      {/* Overview */}
       <section className="section-pad">
+        <div className="container-x grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+          <div>
+            <Reveal>
+              <p className="eyebrow">Why This Program Exists</p>
+              <div className="mt-4 space-y-4 leading-relaxed text-navy-800/85">
+                {(program.overview ?? program.summary).split("\n").filter(Boolean).map((para, i) => (
+                  <p key={i} className={i === 0 ? "text-lg font-medium text-navy-900" : undefined}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+          {program.whoWeServe && (
+            <Reveal delay={120}>
+              <aside className="card bg-navy-950 p-7 lg:sticky lg:top-28">
+                <h2 className="flex items-center gap-2 font-display text-lg font-semibold !text-white">
+                  <Icon name="users" size={19} className="text-gold-300" />
+                  Who We Serve
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed !text-navy-100/85">{program.whoWeServe}</p>
+                <Link
+                  href={`/donate?project=${program.slug}`}
+                  className="btn-primary btn-sm mt-6"
+                >
+                  <Icon name="heart" size={14} />
+                  Support This Program
+                </Link>
+              </aside>
+            </Reveal>
+          )}
+        </div>
+      </section>
+
+      {/* Objectives + activities */}
+      <section className="section-pad bg-sand">
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <h2 className="h-display text-2xl sm:text-3xl">Objectives</h2>
+            <h2 className="h-display text-2xl sm:text-3xl">What We Aim to Achieve</h2>
             <ul className="mt-6 space-y-3.5">
               {program.objectives.map((obj) => (
                 <li key={obj} className="flex items-start gap-3 rounded-2xl border border-navy-100 bg-white p-4 shadow-card">
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-100 text-gold-700">
-                    <Icon name="check" size={13} />
+                    <Icon name="target" size={12} />
                   </span>
                   <span className="text-sm leading-relaxed text-navy-800">{obj}</span>
                 </li>
@@ -89,12 +130,12 @@ export default async function ProgramDetailPage({
             </ul>
           </Reveal>
           <Reveal delay={120}>
-            <h2 className="h-display text-2xl sm:text-3xl">What We Do</h2>
+            <h2 className="h-display text-2xl sm:text-3xl">How We Do It</h2>
             <ul className="mt-6 space-y-3.5">
               {program.activities.map((act) => (
                 <li key={act} className="flex items-start gap-3 rounded-2xl border border-navy-100 bg-white p-4 shadow-card">
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
-                    <Icon name="arrow-right" size={12} />
+                    <Icon name="check" size={13} />
                   </span>
                   <span className="text-sm leading-relaxed text-navy-800">{act}</span>
                 </li>
@@ -104,7 +145,7 @@ export default async function ProgramDetailPage({
         </div>
       </section>
 
-      {/* Impact summary band */}
+      {/* Impact quote + current work */}
       <section className="relative overflow-hidden bg-navy-950 py-16 sm:py-20">
         <div className="container-x grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
           <Reveal>
@@ -116,12 +157,12 @@ export default async function ProgramDetailPage({
           <Reveal delay={140}>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gold-300">
-                <Icon name="target" size={15} />
-                Current Projects
+                <Icon name="calendar" size={15} />
+                Happening Now
               </h3>
               <ul className="mt-4 space-y-2.5">
                 {program.currentProjects.map((cp) => (
-                  <li key={cp} className="flex items-start gap-2.5 text-sm text-navy-100/90">
+                  <li key={cp} className="flex items-start gap-2.5 text-sm !text-navy-100/90">
                     <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-400" />
                     {cp}
                   </li>
@@ -132,10 +173,36 @@ export default async function ProgramDetailPage({
         </div>
       </section>
 
+      {/* Long-term outcomes */}
+      {program.outcomes && program.outcomes.length > 0 && (
+        <section className="section-pad">
+          <div className="container-x">
+            <Reveal>
+              <p className="eyebrow">The Long Game</p>
+              <h2 className="h-display max-w-2xl text-2xl sm:text-3xl">
+                The Change This Program Works Toward
+              </h2>
+            </Reveal>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {program.outcomes.map((outcome, i) => (
+                <Reveal key={outcome} delay={(i % 2) * 90}>
+                  <div className="flex h-full items-start gap-3.5 rounded-2xl border border-leaf-200/70 bg-leaf-50/60 p-5">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-leaf-600 font-display text-xs font-bold !text-white">
+                      {i + 1}
+                    </span>
+                    <p className="text-sm leading-relaxed text-navy-800">{outcome}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Gallery */}
       {program.gallery.length > 0 && (
-        <section className="section-pad bg-sand">
-          <div className="container-x">
+        <section className="section-pad bg-sand pt-0 sm:pt-0">
+          <div className="container-x pt-16 sm:pt-20">
             <Reveal>
               <h2 className="h-display text-2xl sm:text-3xl">From the Field</h2>
             </Reveal>
@@ -158,10 +225,25 @@ export default async function ProgramDetailPage({
         </section>
       )}
 
+      {/* FAQ */}
+      {program.faq && program.faq.length > 0 && (
+        <section className="section-pad">
+          <div className="container-x max-w-3xl">
+            <Reveal>
+              <p className="eyebrow">Good to Know</p>
+              <h2 className="h-display text-2xl sm:text-3xl">Questions People Ask About {program.name}</h2>
+            </Reveal>
+            <Reveal delay={120}>
+              <Faq items={program.faq as FaqItem[]} className="mt-8" />
+            </Reveal>
+          </div>
+        </section>
+      )}
+
       {/* Related projects */}
       {relatedProjects.length > 0 && (
-        <section className="section-pad">
-          <div className="container-x">
+        <section className="section-pad bg-sand pt-0 sm:pt-0">
+          <div className="container-x pt-16 sm:pt-20">
             <Reveal>
               <h2 className="h-display text-2xl sm:text-3xl">Projects in This Program</h2>
             </Reveal>

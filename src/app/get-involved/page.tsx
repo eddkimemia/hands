@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Faq, type FaqItem } from "@/components/site/Faq";
+import { faqJsonLd } from "@/lib/faq-schema";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { PageHero } from "@/components/site/PageHero";
@@ -13,8 +15,41 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Get Involved",
   description:
-    "Volunteer, donate, partner, fundraise or join our team — find your place at Hands of Hope Foundation.",
+    "Volunteer, donate, partner, fundraise or join our team — find your place at Hands of Hope Foundation and use your skills for communities across Kenya.",
 };
+
+const GET_INVOLVED_FAQ: FaqItem[] = [
+  {
+    question: "Do I need special qualifications to volunteer?",
+    answer:
+      "Only for clinical roles, where professional licensing is required. For everything else — tutoring, events, logistics, creative work, mentoring — reliability and respect matter more than résumés.",
+  },
+  {
+    question: "How much time must I commit?",
+    answer:
+      "It varies by role: outreach days can be one-off, mentorship suits a few hours monthly, and project roles may need weekly involvement. You choose what fits; we'll match expectations honestly.",
+  },
+  {
+    question: "Can volunteers from outside Kenya help?",
+    answer:
+      "Yes — remote support in design, communications, grant research and mentorship is genuinely valuable. On-site international volunteering is arranged case by case with proper lead time.",
+  },
+  {
+    question: "Is there an age requirement?",
+    answer:
+      "Volunteers are typically 18+. Younger helpers are welcome through school-organised drives accompanied by their institutions.",
+  },
+  {
+    question: "Why do roles involving children require background checks?",
+    answer:
+      "Because safeguarding is non-negotiable. Checks plus mandatory training protect the children we serve — and protect you as a volunteer working under clear, professional standards.",
+  },
+  {
+    question: "Can my company send a team?",
+    answer:
+      "Absolutely — employee volunteering days are among our favourite partnerships. Email partnerships@handsofhope.org and we will design a day that is useful to communities and meaningful for your team.",
+  },
+];
 
 const FUNDRAISE_IDEAS = [
   {
@@ -63,6 +98,35 @@ export default async function GetInvolvedPage() {
               </Link>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      {/* Volunteer journey */}
+      <section className="pb-4">
+        <div className="container-x">
+          <SectionHeader
+            eyebrow="What to Expect"
+            title="Your Volunteer Journey"
+            description="From first hello to first project day — a clear, respectful process designed to set you up for meaningful service."
+          />
+          <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { title: "Apply", body: "Share your skills, availability and motivation through the short form below." },
+              { title: "Chat & Screen", body: "A friendly conversation helps us find your best fit; roles involving children include background checks." },
+              { title: "Orientation", body: "Safeguarding training and community context prepare you to serve with confidence and respect." },
+              { title: "Serve & Grow", body: "Join projects matching your skills — with team support, clear tasks and honest feedback." },
+            ].map((step, i) => (
+              <Reveal key={step.title} delay={i * 80}>
+                <li className="card relative h-full p-6 pt-8">
+                  <span className="absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-full bg-gold-400 font-display text-sm font-bold text-navy-950 shadow-card">
+                    {i + 1}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold text-navy-900">{step.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-navy-700">{step.body}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -190,6 +254,24 @@ export default async function GetInvolvedPage() {
             </div>
           </Reveal>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section-pad">
+        <div className="container-x max-w-3xl">
+          <SectionHeader
+            eyebrow="Common Questions"
+            title="Before You Get Involved"
+          />
+          <Reveal delay={120}>
+            <Faq items={GET_INVOLVED_FAQ} className="mt-10" />
+          </Reveal>
+        </div>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(GET_INVOLVED_FAQ)) }}
+        />
       </section>
 
       {/* Careers */}

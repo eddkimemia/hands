@@ -1,4 +1,5 @@
 import type { DatabaseShape } from "@/types";
+import enrichedPrograms from "./enriched-programs.json";
 
 /* Verified Unsplash photo IDs (checked HTTP 200 at build time) */
 const u = (id: string, w = 1600) =>
@@ -51,7 +52,7 @@ export const IMG = {
 const now = () => new Date().toISOString();
 
 export function buildSeed(): DatabaseShape {
-  return {
+  const seed: DatabaseShape = {
     settings: {
       orgName: "Hands of Hope Foundation",
       tagline: "Extending Hands. Inspiring Hope.",
@@ -560,6 +561,21 @@ export function buildSeed(): DatabaseShape {
     orders: [],
     chats: [],
   };
+
+  // Merge long-form program enrichment into seeded programs.
+  for (const program of seed.programs) {
+    const extra = (
+      enrichedPrograms as { slug: string; overview: string; whoWeServe: string; outcomes: string[]; faq: { question: string; answer: string }[] }[]
+    ).find((e) => e.slug === program.slug);
+    if (extra) {
+      program.overview = extra.overview;
+      program.whoWeServe = extra.whoWeServe;
+      program.outcomes = extra.outcomes;
+      program.faq = extra.faq;
+    }
+  }
+
+  return seed;
 }
 
 export const seedMeta = { createdAt: now() };

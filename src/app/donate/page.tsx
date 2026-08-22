@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { Faq, type FaqItem } from "@/components/site/Faq";
+import { faqJsonLd } from "@/lib/faq-schema";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { DonateWidget } from "@/components/site/DonateWidget";
+import { SectionHeader } from "@/components/site/Section";
 import { getProjects, getSettings } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
@@ -108,6 +111,102 @@ export default async function DonatePage() {
           </aside>
         </div>
       </section>
+      {/* Stewardship + FAQ */}
+      <section className="section-pad">
+        <div className="container-x grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <SectionHeader
+              eyebrow="Responsible Stewardship"
+              title="Where Every Shilling Goes"
+              description="Trust is earned in the open — here is exactly how your generosity is handled."
+              align="left"
+              className="!max-w-none"
+            />
+            <Reveal delay={120}>
+              <ul className="mt-7 space-y-4">
+                {[
+                  {
+                    title: "Straight to programs",
+                    body: "Gifts designated to a project are ring-fenced for it. Undesignated gifts flow where the verified need is greatest that month.",
+                  },
+                  {
+                    title: "Verified before spent",
+                    body: "Beneficiary lists are confirmed jointly with schools, health facilities and local leaders before any funds move.",
+                  },
+                  {
+                    title: "Recorded & reported",
+                    body: "Every gift gets a reference and appears in our financial reporting cycle, shared openly on the Transparency page.",
+                  },
+                  {
+                    title: "Independence protected",
+                    body: "Our sustainability initiatives — training, merchandise, partnerships — fund operations so donations stay focused on communities.",
+                  },
+                ].map((item) => (
+                  <li key={item.title} className="flex gap-3.5 rounded-2xl border border-navy-100 bg-white p-5 shadow-card">
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold-100 text-gold-800">
+                      <Icon name="shield-check" size={17} />
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold text-navy-900">{item.title}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-navy-600">{item.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+
+          <div>
+            <SectionHeader
+              eyebrow="Giving FAQ"
+              title="Questions Donors Ask"
+              align="left"
+              className="!max-w-none"
+            />
+            <Reveal delay={140}>
+              <Faq items={DONATE_FAQ} className="mt-7" />
+            </Reveal>
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(DONATE_FAQ)) }}
+        />
+      </section>
     </>
   );
 }
+
+const DONATE_FAQ: FaqItem[] = [
+  {
+    question: "Is my payment secure?",
+    answer:
+      "Yes. When online giving is active you are redirected to a PCI-DSS compliant checkout (Paystack) and we never see or store your card details. A donation is only marked received after our server verifies the payment directly with the provider.",
+  },
+  {
+    question: "Can I give monthly?",
+    answer:
+      "Absolutely — choose 'Give Monthly'. Recurring support lets programs plan ahead with confidence. You can pause or change it anytime by emailing us; no questions asked.",
+  },
+  {
+    question: "Can I direct my gift to a specific project?",
+    answer:
+      "Yes, use the designation selector in the form. We honour designations wherever practical; if a project becomes unviable we apply your gift to the closest comparable purpose and tell you.",
+  },
+  {
+    question: "Will I get a receipt?",
+    answer:
+      "Every confirmed gift receives an acknowledgement with its reference number. Confirmed contributions are also reflected in our published financial summaries.",
+  },
+  {
+    question: "Is my donation tax-deductible?",
+    answer:
+      "We provide official receipts for all confirmed donations. Because tax treatment depends on your jurisdiction and personal situation, please consult your tax advisor on deductibility.",
+  },
+  {
+    question: "Can I give via M-Pesa or bank transfer?",
+    answer:
+      "Yes — email info@handsofhope.org and we will share secure payment details plus an official acknowledgement. Our online checkout architecture also supports M-Pesa as payments are connected.",
+  },
+];

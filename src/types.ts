@@ -58,6 +58,10 @@ export interface Program {
   activities: string[];
   impactSummary: string;
   currentProjects: string[];
+  overview?: string; // long-form context: why this program exists
+  whoWeServe?: string;
+  outcomes?: string[]; // long-term change this program works toward
+  faq?: { question: string; answer: string }[];
   gallery: string[];
   published: boolean;
   order: number;

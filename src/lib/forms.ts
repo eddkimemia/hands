@@ -41,6 +41,8 @@ export interface FieldRule {
   email?: boolean;
   max?: number;
   min?: number;
+  /** Human-friendly field name used in validation messages. */
+  label?: string;
 }
 
 export function validateFields(
@@ -50,24 +52,25 @@ export function validateFields(
   const errors: Record<string, string> = {};
 
   for (const [field, rule] of Object.entries(rules)) {
+    const name = rule.label ?? field;
     let value = body[field];
     if (typeof value === "string") value = value.trim();
 
     if (rule.required && (value === undefined || value === null || value === "")) {
-      errors[field] = "This field is required.";
+      errors[field] = `${name} is required.`;
       continue;
     }
     if (value === undefined || value === null || value === "") continue;
 
     if (typeof value !== "string") {
-      errors[field] = "Invalid value.";
+      errors[field] = `${name} has an invalid value.`;
       continue;
     }
-    if (rule.email && !isEmail(value)) errors[field] = "Please enter a valid email address.";
+    if (rule.email && !isEmail(value)) errors[field] = `${name} must be a valid email address.`;
     if (rule.min && value.length < rule.min)
-      errors[field] = `Please enter at least ${rule.min} characters.`;
+      errors[field] = `${name} must be at least ${rule.min} characters.`;
     if (rule.max && value.length > rule.max)
-      errors[field] = `Please keep this under ${rule.max} characters.`;
+      errors[field] = `${name} must stay under ${rule.max} characters.`;
   }
 
   return errors;

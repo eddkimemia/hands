@@ -34,9 +34,9 @@ export async function POST(req: Request) {
   const frequency = body.frequency === "monthly" ? "monthly" : "once";
 
   const errors = validateFields(body, {
-    donorName: { required: !body.anonymous, max: 120 },
-    email: { required: true, email: true, max: 200 },
-    phone: { max: 40 },
+    donorName: { required: !body.anonymous, max: 120, label: "Your name" },
+    email: { required: true, email: true, max: 200, label: "Email" },
+    phone: { max: 40, label: "Phone" },
   });
   if (!Number.isFinite(amount) || amount < 50) {
     errors.amountKes = "Please enter an amount of KES 50 or more.";

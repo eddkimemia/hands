@@ -1,0 +1,152 @@
+[
+  {
+    "slug": "health-and-wellbeing",
+    "overview": "In many Kenyan communities, the nearest health facility can be hours away, and even where services exist, the cost of transport, medicine and clinic fees puts them out of reach for vulnerable households. Preventable and manageable conditions — from hypertension to worm infections — often go undetected until they become emergencies.\n\nOur Health & Wellbeing program exists to close that distance. We bring screening, health education and referrals directly to villages through mobile outreach camps organised jointly with community health promoters and local dispensaries. We complement Kenya's public health system rather than replace it: every camp runs with the knowledge of county health offices, and every referral follows government pathways.\n\nJust as importantly, we invest in prevention. Sessions on nutrition, hygiene, maternal health and non-communicable disease awareness equip families to protect their own health long after our team leaves the village.",
+    "whoWeServe": "Mothers and young children, elderly neighbours living alone, people managing chronic conditions such as diabetes and hypertension, and households that cannot easily afford the full cost of reaching care.",
+    "outcomes": [
+      "Families can recognise early warning signs of common conditions and act sooner",
+      "Community health promoters form a trained, lasting first line of support",
+      "Treatable conditions are caught earlier through free screening days",
+      "Vulnerable patients reach referred care without falling through financial cracks"
+    ],
+    "faq": [
+      {
+        "question": "Do you employ doctors and nurses?",
+        "answer": "Our outreach camps are staffed by licensed volunteer professionals alongside nurses seconded from partner dispensaries. We handle logistics, supplies and community mobilisation; clinical care always happens under qualified supervision and within existing public health structures."
+      },
+      {
+        "question": "How do you decide which communities get outreach camps?",
+        "answer": "Locations are chosen together with community health promoters, local chiefs and county health officials, prioritising areas where distance and cost keep households from regular care. We return quarterly rather than visiting once."
+      },
+      {
+        "question": "Is treatment at your camps really free?",
+        "answer": "Screening, education and basic medication at camps are provided free of charge. Where someone needs further care, we help coordinate referrals and, case by case, support vulnerable families with associated costs — always verified with the receiving facility."
+      }
+    ]
+  },
+  {
+    "slug": "education",
+    "overview": "Kenya's commitment to schooling is strong, yet for many families the hidden costs of education — uniforms, levies, books, transport — remain the heaviest barrier between a child and a classroom. When these costs collide with a drought, a medical bill or a lost income, learners quietly disappear from registers.\n\nOur Education program walks with children and schools to remove those barriers and strengthen learning itself. We verify needs jointly with head teachers and local administration, support learners with uniforms and materials, and reinvest in what makes classrooms effective: mentorship, tutoring and learning resources.\n\nBeyond keeping children in school, we prepare them for life after it — career guidance, digital literacy introductions and mentorship circles connect classroom effort to real opportunity.",
+    "whoWeServe": "Learners at risk of dropping out, ambitious students needing guidance, under-resourced primary and secondary schools, and teachers who want extra support for their classrooms.",
+    "outcomes": [
+      "Learners stay in school through financial shocks instead of dropping out",
+      "Classrooms receive the materials and mentorship that improve learning",
+      "Students leave school with clearer pathways to further training or work",
+      "Schools and parents share ownership of every child's retention plan"
+    ],
+    "faq": [
+      {
+        "question": "How do you choose which learners to support?",
+        "answer": "No child is selected by us alone. Needs are verified jointly with head teachers, local chiefs and home visits, so support reaches genuinely vulnerable learners — and dignity is protected throughout."
+      },
+      {
+        "question": "Can I sponsor one specific child?",
+        "answer": "We pool support at school and cohort level. This protects children from feeling singled out and keeps administration lean — but sponsors still receive verified reports on attendance and progress for the schools they stand behind."
+      },
+      {
+        "question": "Does Hands of Hope build schools?",
+        "answer": "Occasionally, where a community has secured land and government staffing, we co-fund classrooms or facilities. Our main focus, however, is making existing schools effective — because a supported teacher and a retained learner matter more than new buildings."
+      }
+    ]
+  },
+  {
+    "slug": "food-security",
+    "overview": "Most Kenyan smallholder farming depends on unpredictable rains, and when seasons fail, the effects ripple straight into household plates and school attendance. Yet the same soil that fails in a bad season can produce abundantly with water-wise methods, better seed and patient training.\n\nOur Food Security program pairs immediate food support for identified vulnerable households with long-term agricultural capacity. Community gardens, kitchen garden rollouts and seedling nurseries give families something that outlasts any distribution: the ability to feed themselves.\n\nWe promote climate-smart practices — composting, water harvesting, drought-tolerant crops — learned hands-on in demonstration gardens rather than lecture halls, and we link surplus to local markets so effort turns into income.",
+    "whoWeServe": "Households facing acute food gaps, smallholder farmers ready to adopt resilient methods, schools wanting feeding-program gardens, and community groups turning shared land into shared livelihoods.",
+    "outcomes": [
+      "Households meet immediate food needs without sacrificing dignity",
+      "Kitchen gardens supply vegetables year-round, even in dry spells",
+      "Farmers adopt water-wise practices that survive erratic seasons",
+      "Surplus produce becomes household income through local market links"
+    ],
+    "faq": [
+      {
+        "question": "Is food given free, or sold?",
+        "answer": "Emergency food baskets for verified vulnerable households are given freely and with dignity. Everything built for the long term — gardens, nurseries, trainings — is designed to become self-sustaining so families graduate from needing support."
+      },
+      {
+        "question": "What makes your agricultural training different?",
+        "answer": "It happens in demonstration gardens, not seminars. Farmers learn by planting, watering and harvesting with our agronomy partners, using methods suited to their own soil — which is why techniques get replicated at home."
+      },
+      {
+        "question": "Do you work during droughts only?",
+        "answer": "Drought response is when need peaks, but resilience is built between crises. We run programs year-round precisely so the next dry spell finds households better prepared than the last one."
+      }
+    ]
+  },
+  {
+    "slug": "youth-empowerment",
+    "overview": "Kenya is a young country brimming with ambition — and too many young people finish school with certificates but no clear bridge to work, enterprise or purpose. Idle talent is not just a personal loss; it is a community loss.\n\nOur Youth Empowerment program treats young people as leaders now, not someday. Vocational and digital skills bootcamps connect ability to market demand. Business idea clinics turn hustle into structure. Sports, arts and talent meetups create safe spaces where character grows alongside skill.\n\nWe walk beside youth cohorts for months, not weekends — connecting graduates of our trainings to mentors, internships, starter toolkits and each other, because networks are as decisive as skills.",
+    "whoWeServe": "School leavers and unemployed youth, young women locked out of formal opportunities, budding entrepreneurs with ideas but no capital or structure, and talented athletes and artists without platforms.",
+    "outcomes": [
+      "Young people gain market-relevant vocational and digital skills",
+      "Youth-led enterprises launch with structure, mentoring and starter support",
+      "Participants build peer networks that outlast any single program",
+      "Communities gain role models who hire and train the next cohort"
+    ],
+    "faq": [
+      {
+        "question": "Who qualifies for your youth bootcamps?",
+        "answer": "Motivated young people aged roughly 18–30 from the communities we serve. We deliberately reserve places for young women and school leavers from vulnerable households, selected transparently with local leadership."
+      },
+      {
+        "question": "Do you give money to start businesses?",
+        "answer": "Not cash handouts. Graduates can earn starter toolkits and equipment support after completing training and presenting a simple business plan — assets that build capacity rather than dependence."
+      },
+      {
+        "question": "I'm employed. How can I help youth?",
+        "answer": "Mentor an emerging entrepreneur, host a site visit, review business plans, or sponsor a toolkit. One experienced professional can change the trajectory of several young people a year."
+      }
+    ]
+  },
+  {
+    "slug": "community-development",
+    "overview": "Lasting development is never delivered to a community — it is led by it. Too many well-funded projects fail because they begin with external plans instead of local priorities. Our Community Development program inverts that order.\n\nEvery engagement starts with participatory conversations where residents map their own needs, assets and dreams. From there we co-create practical projects — water point rehabilitation, safe community spaces, group strengthening — with the community contributing labour, land or leadership and us bringing technical support, materials and coordination.\n\nWe also invest in the invisible infrastructure: governance training for local groups, bookkeeping for community projects and linkage-building to government programs, so progress continues with or without us.",
+    "whoWeServe": "Villages lacking reliable water points, community groups ready to manage projects well, local leaders seeking planning skills, and residents whose voices are usually last in development decisions.",
+    "outcomes": [
+      "Water and shared facilities are rehabilitated and actually maintained",
+      "Local groups manage resources transparently and confidently",
+      "Communities hold functioning plans they authored themselves",
+      "Government and partner resources flow to communities that know how to ask"
+    ],
+    "faq": [
+      {
+        "question": "How does a community qualify for a project?",
+        "answer": "By invitation and participation. We respond to requests from communities themselves, assess feasibility together, and proceed only where residents commit visible contributions — labour, land or leadership — because ownership predicts maintenance."
+      },
+      {
+        "question": "What happens when your involvement ends?",
+        "answer": "Handover is designed from day one. Committees are trained, spare-part plans exist, and we schedule follow-up visits. A project is only counted complete when the community runs it independently."
+      },
+      {
+        "question": "Why focus on training committees? It sounds abstract.",
+        "answer": "Because broken committees break boreholes. Governance training is unglamorous and decisive: groups that manage funds transparently keep water flowing and halls open for decades."
+      }
+    ]
+  },
+  {
+    "slug": "emergency-support",
+    "overview": "When fire takes a family's home, floods wash away a crop or a breadwinner is suddenly hospitalized, speed and dignity decide whether a setback becomes a catastrophe. Formal systems help eventually; neighbours help immediately. Hands of Hope builds the bridge between the two.\n\nOur Emergency Support program maintains community-based alert networks that let us verify needs within hours. Rapid assessments lead to essentials — food, clothing, shelter materials, medical transport support — delivered respectfully, without cameras or queues.\n\nCrucially, we stay past the emergency. Follow-up visits connect affected families to longer-term programs, because recovery isn't finished when the smoke clears; it's finished when the household stands on its own again.",
+    "whoWeServe": "Families affected by house fires, floods or sudden bereavement; individuals in medical crises requiring urgent referral support; and communities responding to localized disasters.",
+    "outcomes": [
+      "Verified needs are met within days, not weeks",
+      "Families survive acute crises without selling productive assets",
+      "Recovery continues until households are self-reliant again",
+      "Community alert networks strengthen local solidarity permanently"
+    ],
+    "faq": [
+      {
+        "question": "How fast can you actually respond?",
+        "answer": "Verification typically begins within hours thanks to community focal points, and essential support often moves within days. Speed depends on verified information — which protects genuine victims from being crowded out."
+      },
+      {
+        "question": "Why do you verify instead of helping immediately?",
+        "answer": "Because dignity and fairness both demand it. Verification keeps limited resources for genuinely affected families and shields beneficiaries from exploitation by false claims — while still moving as fast as facts allow."
+      },
+      {
+        "question": "There's an emergency right now near me. What do I do?",
+        "answer": "Contact us immediately through the contact page or WhatsApp with location details and what's needed. Even partial, fast information helps us mobilise assessment teams quickly."
+      }
+    ]
+  }
+]

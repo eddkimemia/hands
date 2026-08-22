@@ -66,6 +66,36 @@ export default async function TransparencyPage() {
             </Reveal>
           ))}
         </div>
+
+        {/* Accountability practices */}
+        <Reveal delay={200}>
+          <div className="mx-auto mt-12 max-w-4xl rounded-3xl border border-navy-100 bg-white p-8 shadow-card sm:p-10">
+            <h2 className="font-display text-xl font-semibold text-navy-900 sm:text-2xl">
+              Accountability in Practice
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-navy-600">
+              Policies only matter when they shape daily decisions. These are the working
+              practices behind our commitments:
+            </p>
+            <ul className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+              {[
+                "Dual sign-off on every expenditure, regardless of size",
+                "Beneficiary lists verified jointly with local leaders and institutions",
+                "Conflict-of-interest declarations by board and staff",
+                "Procurement through documented comparison, not relationships",
+                "Safeguarding focal points in every active program area",
+                "Whistleblower channel with guaranteed follow-up",
+                "Quarterly internal program reviews against written objectives",
+                "Data protection aligned to the Kenya Data Protection Act",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-navy-800">
+                  <Icon name="check-circle" size={16} className="mt-0.5 shrink-0 text-leaf-600" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </section>
 
       {/* Documents */}

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Faq, type FaqItem } from "@/components/site/Faq";
+import { faqJsonLd } from "@/lib/faq-schema";
 import { Icon } from "@/components/Icon";
+import { Reveal } from "@/components/Reveal";
 import { PageHero } from "@/components/site/PageHero";
+import { SectionHeader } from "@/components/site/Section";
 import { ShopGrid } from "@/components/site/ShopGrid";
 import { getProducts } from "@/lib/content";
 
@@ -27,6 +31,25 @@ export default async function ShopPage() {
 
       <section className="section-pad">
         <div className="container-x">
+          {/* How ordering works */}
+          <div className="mb-16 grid gap-5 sm:grid-cols-3">
+            {[
+              { icon: "shopping-bag" as const, title: "1 · Add to Cart", body: "Pick your items, sizes and colors — or order a single product straight from its page." },
+              { icon: "send" as const, title: "2 · Order Your Way", body: "Check out on site with delivery details, or send the pre-filled order to our team on WhatsApp." },
+              { icon: "package" as const, title: "3 · Confirmed & Delivered", body: "We verify stock personally, arrange secure payment and deliver countrywide — no surprises." },
+            ].map((s) => (
+              <div key={s.title} className="card flex items-start gap-4 p-6">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold-100 text-gold-800">
+                  <Icon name={s.icon} size={22} />
+                </span>
+                <div>
+                  <h2 className="text-sm font-bold text-navy-900">{s.title}</h2>
+                  <p className="mt-1 text-xs leading-relaxed text-navy-600">{s.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <ShopGrid products={products} />
 
           <div className="mt-16 grid gap-5 sm:grid-cols-3">
@@ -79,8 +102,57 @@ export default async function ShopPage() {
               Support Our Work
             </Link>
           </div>
+
+          {/* FAQ */}
+          <div className="mx-auto mt-16 max-w-3xl">
+            <SectionHeader
+              eyebrow="Good to Know"
+              title="Shopping Questions, Answered"
+            />
+            <Reveal delay={120}>
+              <Faq items={SHOP_FAQ} className="mt-10" />
+            </Reveal>
+          </div>
+          <script
+            type="application/ld+json"
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(SHOP_FAQ)) }}
+          />
         </div>
       </section>
     </>
   );
 }
+
+const SHOP_FAQ: FaqItem[] = [
+  {
+    question: "How does buying merchandise support the mission?",
+    answer:
+      "Proceeds from merchandise strengthen the organization's sustainability — funding operations and programs so our impact doesn't depend on donations alone. Our financial structure and policies are published on the Transparency page.",
+  },
+  {
+    question: "How long does delivery take?",
+    answer:
+      "Nairobi orders are typically arranged within days; countrywide deliveries depend on your location. Our team confirms timing with you personally before anything ships.",
+  },
+  {
+    question: "How do I pay?",
+    answer:
+      "After placing an order we confirm availability and share secure payment options (including M-Pesa) directly with you. Nothing is charged before you've confirmed every detail.",
+  },
+  {
+    question: "Do you deliver outside Kenya?",
+    answer:
+      "Yes, case by case. International orders are quoted separately with shipping costs confirmed up front — email us your location and items for an exact arrangement.",
+  },
+  {
+    question: "What if my item is damaged or the size is wrong?",
+    answer:
+      "Tell us within seven days of delivery and we'll make it right — exchange or replacement, handled personally by the shop team.",
+  },
+  {
+    question: "Can I order in bulk for an event or team?",
+    answer:
+      "Yes! Bulk orders for churches, companies and events come with better pricing. Message us on WhatsApp or email the shop team with quantities and dates.",
+  },
+];

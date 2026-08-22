@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Icon } from "@/components/Icon";
+import { Faq, type FaqItem } from "@/components/site/Faq";
+import { faqJsonLd } from "@/lib/faq-schema";
 import { Reveal } from "@/components/Reveal";
 import { PageHero } from "@/components/site/PageHero";
 import { SectionHeader } from "@/components/site/Section";
@@ -8,6 +10,34 @@ import { getSettings, getTeam } from "@/lib/content";
 import { IMG } from "@/data/seed";
 
 export const dynamic = "force-dynamic";
+
+const ABOUT_FAQ: FaqItem[] = [
+  {
+    question: "Is Hands of Hope Foundation only for certain tribes, religions or political groups?",
+    answer:
+      "No. We serve Kenyans based on need alone. Our programs are open to every community regardless of ethnicity, faith, gender or background, and we keep our operations strictly non-political.",
+  },
+  {
+    question: "How is the foundation funded?",
+    answer:
+      "Through a deliberate mix of individual donations, corporate partnerships and our own sustainability initiatives — including merchandise sales and training programs. This blend protects our independence and reduces reliance on any single funder.",
+  },
+  {
+    question: "Who oversees the foundation's leadership?",
+    answer:
+      "A non-executive board provides independent oversight of strategy, risk and finances, supported by documented governance, finance and safeguarding policies. Governance information is published on our Transparency page.",
+  },
+  {
+    question: "How do you protect the children and families you work with?",
+    answer:
+      "Safeguarding is central to everything we do: screened staff and volunteers, mandatory safeguarding training, strict media-consent rules and confidential reporting channels. Our full Safeguarding Policy is published on this site.",
+  },
+  {
+    question: "Can I visit a project before deciding to support it?",
+    answer:
+      "Yes — serious supporters are welcome to see the work firsthand. Visits are arranged by appointment so communities host guests well rather than being interrupted by drop-ins.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -135,6 +165,59 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* How we work */}
+      <section className="section-pad bg-sand">
+        <div className="container-x">
+          <SectionHeader
+            eyebrow="Our Method"
+            title="How We Work"
+            description="Five deliberate stages turn good intentions into change that lasts — and every stage belongs to the community as much as to us."
+          />
+          <ol className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              {
+                icon: "heart-pulse" as const,
+                title: "Listen",
+                body: "Every engagement begins with patient community conversations — mapping needs, assets and dreams in residents' own words.",
+              },
+              {
+                icon: "handshake" as const,
+                title: "Co-Design",
+                body: "Programs are planned jointly with residents, local leaders and technical partners, so ownership exists from day one.",
+              },
+              {
+                icon: "target" as const,
+                title: "Deliver",
+                body: "We execute with professional discipline: verified beneficiaries, transparent procurement, documented processes.",
+              },
+              {
+                icon: "trending-up" as const,
+                title: "Measure",
+                body: "Progress is tracked against objectives set at design time — attendance records, verification visits, honest reporting.",
+              },
+              {
+                icon: "leaf" as const,
+                title: "Hand Over",
+                body: "Committees are trained, maintenance plans agreed, and follow-up visits scheduled. Success = independence.",
+              },
+            ].map((step, i) => (
+              <Reveal key={step.title} delay={i * 80}>
+                <li className="card flex h-full flex-col p-6">
+                  <span className="flex items-center justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-gold-300">
+                      <Icon name={step.icon} size={20} />
+                    </span>
+                    <span className="font-display text-3xl font-semibold text-gold-200">{i + 1}</span>
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-semibold text-navy-900">{step.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-navy-700">{step.body}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* Values */}
       <section className="section-pad">
         <div className="container-x">
@@ -245,6 +328,25 @@ export default async function AboutPage() {
             <p className="mt-6 text-xs leading-relaxed text-navy-500">{settings.registrationNote}</p>
           </Reveal>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section-pad">
+        <div className="container-x max-w-3xl">
+          <SectionHeader
+            eyebrow="Common Questions"
+            title="About Hands of Hope Foundation"
+            description="Straight answers about who we are and how we operate."
+          />
+          <Reveal delay={120}>
+            <Faq items={ABOUT_FAQ} className="mt-10" />
+          </Reveal>
+        </div>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(ABOUT_FAQ)) }}
+        />
       </section>
 
       {/* Where we work */}

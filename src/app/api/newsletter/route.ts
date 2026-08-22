@@ -26,8 +26,8 @@ export async function POST(req: Request) {
   }
 
   const errors = validateFields(body, {
-    name: { required: true, max: 120 },
-    email: { required: true, email: true, max: 200 },
+    name: { required: true, max: 120, label: "Name" },
+    email: { required: true, email: true, max: 200, label: "Email" },
   });
   if (Object.keys(errors).length) {
     return NextResponse.json({ error: Object.values(errors)[0], errors }, { status: 422 });

@@ -28,22 +28,44 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
   async function placeOrder(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!items.length) return;
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+
+    const form = e.currentTarget;
+    const get = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value.trim() ?? "";
+
+    // Read fields explicitly and trim — nothing silently dropped or padded.
+    const town = get("co-town");
+    const estate = get("co-estate");
+    const street = get("co-street");
+    const payload = {
+      customerName: get("co-name"),
+      email: get("co-email"),
+      phone: get("co-phone"),
+      town,
+      estate,
+      street,
+      notes: get("co-notes"),
+      currency: effectiveCurrency,
+      items: items.map((i) => ({
+        productId: i.productId,
+        qty: i.qty,
+        size: i.size || undefined,
+        color: i.color || undefined,
+      })),
+    };
+
+    // Pre-flight check with precise, field-named messaging.
+    if (!payload.customerName) return fail("co-name", "Please enter your name.");
+    if (!payload.email) return fail("co-email", "Please enter your email address.");
+    if (!payload.phone) return fail("co-phone", "Please enter your phone number.");
+    if (!town) return fail("co-town", "Please enter your town or city.");
+    if (!estate) return fail("co-estate", "Please enter your estate or neighbourhood.");
+
     setStatus("loading");
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          currency: effectiveCurrency,
-          items: items.map((i) => ({
-            productId: i.productId,
-            qty: i.qty,
-            size: i.size || undefined,
-            color: i.color || undefined,
-          })),
-        }),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -59,6 +81,13 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "Something went wrong.");
     }
+  }
+
+  function fail(focusId: string, msg: string): false {
+    setStatus("error");
+    setMessage(msg);
+    document.getElementById(focusId)?.focus();
+    return false;
   }
 
   /* ------------------------------ empty guard ----------------------------- */
@@ -157,8 +186,16 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
             <input id="co-phone" name="phone" required maxLength={40} className="input" placeholder="+254…" />
           </div>
           <div>
-            <label htmlFor="co-address" className="label">Delivery address *</label>
-            <input id="co-address" name="deliveryAddress" required minLength={6} maxLength={500} className="input" placeholder="Town / estate / building" />
+            <label htmlFor="co-town" className="label">Town / City *</label>
+            <input id="co-town" name="town" required minLength={2} maxLength={120} className="input" placeholder="e.g. Nairobi, Nakuru…" />
+          </div>
+          <div>
+            <label htmlFor="co-estate" className="label">Estate / Neighbourhood *</label>
+            <input id="co-estate" name="estate" required minLength={2} maxLength={200} className="input" placeholder="e.g. Kilimani, Milimani…" />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="co-street" className="label">Street / Building (optional)</label>
+            <input id="co-street" name="street" maxLength={200} className="input" placeholder="Apartment, house number, street…" />
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="co-notes" className="label">Notes (optional)</label>
