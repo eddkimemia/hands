@@ -23,10 +23,6 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
         return;
       }
       const json = await res.json();
-      if (json.singleton) {
-        router.replace(`/admin/${config.key}`);
-        return;
-      }
       setItems((json.data as Item[]) ?? []);
     } catch {
       setError("Failed to load data.");

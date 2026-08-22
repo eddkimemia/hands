@@ -159,7 +159,7 @@ export function ItemForm({ config, item }: { config: ResourceConfig; item: Item 
 
 /* ------------------------------------------------------------------ */
 
-function FieldInput({
+export function FieldInput({
   field,
   value,
   options,
@@ -421,7 +421,7 @@ function FieldInput({
   }
 }
 
-function Label({ field, id }: { field: FieldConfig; id: string }) {
+export function Label({ field, id }: { field: FieldConfig; id: string }) {
   return (
     <label htmlFor={id} className="label">
       {field.label}
