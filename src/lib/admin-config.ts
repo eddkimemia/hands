@@ -34,6 +34,8 @@ export interface ResourceConfig {
   icon: string;
   group: "Content" | "Community" | "Commerce" | "Configuration";
   singleton?: boolean;
+  /** Render a bespoke detail view for this resource instead of the generic form. */
+  customView?: "order";
   hideCreate?: boolean;
   titleField: string;
   subtitleField?: string;
@@ -446,7 +448,8 @@ export const RESOURCES: ResourceConfig[] = [
     hideCreate: true,
     titleField: "customerName",
     subtitleField: "deliveryAddress",
-    columns: ["customerName", "totalKes", "status"],
+    columns: ["customerName", "totalKes", "currency", "status"],
+    customView: "order",
     fields: [
       { key: "customerName", label: "Customer", type: "text" },
       { key: "email", label: "Email", type: "text" },

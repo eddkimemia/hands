@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { PageHero } from "@/components/site/PageHero";
 import { ProductPurchase } from "@/components/site/ProductPurchase";
+import { ShopPriceTag } from "@/components/site/CurrencyToggle";
 import { SmartImage } from "@/components/SmartImage";
 import { getProductById, getProducts, getSettings } from "@/lib/content";
-import { formatKes, SITE_URL, truncate } from "@/lib/utils";
+import { SITE_URL, truncate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -102,7 +103,7 @@ export default async function ProductOrderPage({
             <div className="mt-5 flex items-center justify-between rounded-2xl border border-navy-100 bg-white px-5 py-4 shadow-card">
               <span className="text-sm font-bold text-navy-900">{product.name}</span>
               <span className="rounded-full bg-gold-100 px-4 py-1.5 text-sm font-bold text-gold-800">
-                {formatKes(product.priceKes)}
+                <ShopPriceTag priceKes={product.priceKes} priceUsd={product.priceUsd} />
               </span>
             </div>
           </div>
@@ -111,10 +112,7 @@ export default async function ProductOrderPage({
           <div>
             <h1 className="h-display text-3xl sm:text-4xl">{product.name}</h1>
             <p className="mt-3 inline-block rounded-full bg-gold-100 px-4 py-1.5 font-display text-xl font-semibold text-gold-800">
-              {formatKes(product.priceKes)}
-              {product.priceUsd ? (
-                <span className="ml-2 text-sm font-bold text-navy-500">/ ${product.priceUsd}</span>
-              ) : null}
+              <ShopPriceTag priceKes={product.priceKes} priceUsd={product.priceUsd} />
             </p>
             <div className="mt-4 space-y-3 leading-relaxed text-navy-800/85">
               <p>{product.description}</p>
@@ -185,7 +183,7 @@ export default async function ProductOrderPage({
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate font-display text-sm font-semibold text-navy-900">{p.name}</span>
-                    <span className="text-sm font-bold text-gold-700">{formatKes(p.priceKes)}</span>
+                    <span className="text-sm font-bold text-gold-700"><ShopPriceTag priceKes={p.priceKes} priceUsd={p.priceUsd} /></span>
                   </span>
                   <Icon name="arrow-right" size={15} className="ml-auto shrink-0 text-navy-300 transition-transform group-hover:translate-x-1 group-hover:text-gold-600" />
                 </Link>

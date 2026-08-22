@@ -18,6 +18,8 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
   const [status, setStatus] = useState<"form" | "loading" | "done" | "error">("form");
   const [message, setMessage] = useState("");
   const [orderRef, setOrderRef] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
+  const [emailed, setEmailed] = useState(false);
 
   // USD checkout is only possible when every item has an admin-set USD price.
   const usdAvailable = typeof totalUsd === "number" && currency === "USD";
@@ -77,6 +79,8 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
       setStatus("done");
       setOrderRef(json.reference);
       setMessage(json.message);
+      setBuyerEmail(String(payload.email));
+      setEmailed(Boolean(json.emailed));
       clear();
     } catch (err) {
       setStatus("error");
@@ -127,21 +131,32 @@ export function CheckoutForm({ fees }: { fees: Fees }) {
             </p>
           )}
           <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <Link href="/shop" className="btn-primary btn-sm">
+            <a
+              href={`/api/invoices/${orderRef}?email=${encodeURIComponent(buyerEmail)}`}
+              className="btn-navy btn-sm"
+            >
+              <Icon name="download" size={15} />
+              Download Invoice (PDF)
+            </a>
+            <Link href="/shop" className="btn-outline btn-sm">
               Continue Shopping
             </Link>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hello! I just placed order ${orderRef} and would like to arrange delivery.`,
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp btn-sm"
-            >
-              <Icon name="whatsapp" size={15} />
-              Follow Up on WhatsApp
-            </a>
           </div>
+          <p className="mt-3 text-xs text-navy-500">
+            {emailed
+              ? `A copy of this invoice was emailed to ${buyerEmail}.`
+              : "Tip: this same invoice is also available from your email if our mail service has your address on file."}
+          </p>
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+              `Hello! I just placed order ${orderRef} and would like to arrange delivery.`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-underline mt-4 inline-block text-xs font-bold text-leaf-700"
+          >
+            Follow up on WhatsApp →
+          </a>
         </div>
       </div>
     );

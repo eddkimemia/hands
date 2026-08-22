@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { ItemForm } from "@/components/admin/ItemForm";
 import { ResourceManager } from "@/components/admin/ResourceManager";
 import { SingletonForm } from "@/components/admin/SingletonForm";
 import { getResource } from "@/lib/admin-config";

@@ -11,6 +11,12 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Prevent horizontal overflow sitewide without breaking position: sticky. */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   @apply bg-white font-sans text-navy-900 antialiased;
   text-rendering: optimizeLegibility;

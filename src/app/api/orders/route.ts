@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProductById, getSettings } from "@/lib/content";
 import { id, insertItem } from "@/lib/db";
+import { sendOrderReceiptEmail } from "@/lib/mail";
 import { cleanStr, clientIp, isSpam, tooManyRequests, validateFields } from "@/lib/forms";
 import type { ShopOrder } from "@/types";
 
@@ -116,6 +117,15 @@ export async function POST(req: Request) {
 
   await insertItem("orders", order.id, order);
 
+  // Best-effort receipt email (PDF attached) — never blocks or fails the order.
+  let emailed = false;
+  try {
+    const mailResult = await sendOrderReceiptEmail(order, settings);
+    emailed = mailResult.sent;
+  } catch {
+    emailed = false;
+  }
+
   const grandDisplay =
     currency === "USD"
       ? `$${(order.totalUsd ?? 0).toLocaleString()}`
@@ -125,6 +135,7 @@ export async function POST(req: Request) {
     ok: true,
     reference: order.id,
     currency,
+    emailed,
     totalKes: order.totalKes,
     totalUsd: order.totalUsd,
     message: `Order received (${grandDisplay}). Our shop team will confirm availability and arrange payment & delivery by email or phone.`,

@@ -1,6 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/Icon";
-import { Logo } from "@/components/Logo";
 import { getSettings } from "@/lib/content";
 
 const SOCIAL_ICONS: Record<string, IconName> = {
@@ -44,7 +44,15 @@ export async function Footer() {
       <div className="container-x grid gap-12 py-16 sm:py-20 lg:grid-cols-12">
         {/* Brand */}
         <div className="lg:col-span-4">
-          <Logo variant="light" />
+          <div className="inline-flex items-center rounded-2xl bg-white p-3 shadow-card sm:p-4">
+            <Image
+              src="/logo/hopelogo.jpg"
+              alt={`${settings.orgName} — ${settings.tagline}`}
+              width={280}
+              height={112}
+              className="h-14 w-auto sm:h-16"
+            />
+          </div>
           <p className="mt-5 font-display text-lg font-medium text-gold-300">
             {settings.tagline}
           </p>

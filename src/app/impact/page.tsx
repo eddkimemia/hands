@@ -215,13 +215,13 @@ export default async function ImpactPage() {
           <Reveal delay={140}>
             <ul className="space-y-3">
               {reports.slice(0, 5).map((r) => (
-                <li key={r.id} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5">
+                <li key={r.id} className="flex items-center gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold-400/15 text-gold-300">
                     <Icon name="file-text" size={18} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-white">{r.title}</p>
-                    <p className="truncate text-xs text-navy-300">{r.description}</p>
+                    <p className="break-words text-sm font-bold text-white">{r.title}</p>
+                    <p className="mt-0.5 line-clamp-2 break-words text-xs leading-relaxed text-navy-300">{r.description}</p>
                   </div>
                 </li>
               ))}

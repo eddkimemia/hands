@@ -216,6 +216,8 @@ export interface ShopOrder {
   notes?: string;
   createdAt: string;
   status: "new" | "confirmed" | "fulfilled" | "cancelled";
+  /** Set when the PDF receipt has been emailed to the buyer. */
+  emailedAt?: string;
 }
 
 export interface ChatMessage {

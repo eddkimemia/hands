@@ -83,7 +83,7 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
           <p className="mt-1 text-sm text-navy-500">{config.description}</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card">
+        <div className="overflow-x-auto overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-navy-100 bg-navy-50/60 text-xs uppercase tracking-wider text-navy-500">
